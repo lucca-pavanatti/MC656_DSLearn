@@ -1,4 +1,4 @@
-- Nome do Fulano  (RAXXXXX)
+- Lucca Pavanatti Duarte  (230555)
 - Nome do Fulano  (RAXXXXX)
 - Nome do Fulano  (RAXXXXX)
 - Nome do Fulano  (RAXXXXX)
