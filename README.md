@@ -2,5 +2,6 @@
 
 ## Integrantes
 
-### Alícia Gonçalves Vieira - 219950
 ### Lucca Pavanatti Duarte - 230555
+### Victor Moraes Fernandes - 194773
+### Alícia Gonçalves Vieira - 219950
