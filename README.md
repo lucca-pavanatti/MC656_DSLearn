@@ -4,3 +4,7 @@
 
 ### Lucca Pavanatti Duarte - 230555
 ### Victor Moraes Fernandes - 194773
+
+### Alícia Gonçalves Vieira - 219950
+
+### Thiago Augusto de Tulio Nascimento - 252937
