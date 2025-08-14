@@ -1,5 +1,5 @@
-- Alícia Gonçalves Vieira (219950)
-- Nome do Fulano  (RAXXXXX)
-- Nome do Fulano  (RAXXXXX)
+- Alícia Gonçalves Vieira  (219950)
+- Lucca Pavanatti Duarte  (230555)
+- Victor Moraes Fernandes (194773)
 - Nome do Fulano  (RAXXXXX)
 - Nome do Fulano  (RAXXXXX)
