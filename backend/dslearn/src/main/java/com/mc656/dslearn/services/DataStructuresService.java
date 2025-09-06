@@ -16,6 +16,9 @@ public class DataStructuresService {
     private DataStructureMapper dataStructureMapper;
 
     public DataStructureDetailDTO findDetailsByName(String name) {
+        if (name == null){
+            return null;
+        }
         DataStructure model = switch (name) {
             case "Array" -> {
                 List<Exercise> exercises = List.of(
