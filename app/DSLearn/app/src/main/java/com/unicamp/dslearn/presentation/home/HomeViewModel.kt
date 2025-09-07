@@ -6,18 +6,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.filter
 import com.unicamp.dslearn.core.model.CardModel
+import com.unicamp.dslearn.domain.cardsearch.SearchCardUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class HomeViewModel : ViewModel() {
+class HomeViewModel(searchCardUseCase: SearchCardUseCase) : ViewModel() {
 
     val searchQueryState = TextFieldState()
 
@@ -26,12 +28,10 @@ class HomeViewModel : ViewModel() {
         snapshotFlow { searchQueryState.text }
             .debounce(500)
             .flatMapLatest { query ->
-                if (query.isNotBlank()) {
-//                searchCardUseCase(query)
-//                    .distinctUntilChanged()
-                    flow { emit(PagingData.empty<CardModel>()) }
-                } else {
-                    flow { emit(PagingData.empty<CardModel>()) }
+                searchCardUseCase(query.toString()).map { pagingData ->
+                    pagingData.filter { card ->
+                        card.name.contains(query, ignoreCase = true)
+                    }
                 }
             }.cachedIn(
                 viewModelScope
@@ -40,4 +40,5 @@ class HomeViewModel : ViewModel() {
                 SharingStarted.Lazily,
                 PagingData.empty()
             )
+
 }

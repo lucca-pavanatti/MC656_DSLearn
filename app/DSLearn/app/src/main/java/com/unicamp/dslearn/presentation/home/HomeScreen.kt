@@ -1,10 +1,7 @@
 package com.unicamp.dslearn.presentation.home
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -28,10 +25,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,7 +43,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = koinViewModel(), onCardClick: (Int) -> Unit) {
+fun HomeScreen(viewModel: HomeViewModel = koinViewModel(), onCardClick: (Int, String) -> Unit) {
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
@@ -76,14 +69,11 @@ private fun HomeScreen(
     modifier: Modifier = Modifier,
     cardPagingItems: LazyPagingItems<CardModel>,
     searchQuery: TextFieldState,
-    onCardClick: (Int) -> Unit
+    onCardClick: (Int, String) -> Unit
 ) {
-    var expanded by rememberSaveable { mutableStateOf(false) }
-
-    Box(modifier.fillMaxSize()) {
-
+    Column(modifier.fillMaxWidth()) {
         SearchBar(
-            modifier = Modifier.align(Alignment.TopCenter),
+            modifier = Modifier.align(Alignment.CenterHorizontally),
             inputField = {
                 SearchBarDefaults.InputField(
                     query = searchQuery.text.toString(),
@@ -91,8 +81,8 @@ private fun HomeScreen(
                         searchQuery.edit { replace(0, length, it) }
                     },
                     onSearch = { },
-                    expanded = expanded,
-                    onExpandedChange = { expanded = it },
+                    expanded = false,
+                    onExpandedChange = { },
                     placeholder = { Text(text = stringResource(id = R.string.search)) },
                     leadingIcon = {
                         Icon(
@@ -105,39 +95,34 @@ private fun HomeScreen(
                         val isLoadingCards = cardPagingItems.loadState.refresh is LoadState.Loading
                         SearchBarTrailingIcon(isLoadingCards = isLoadingCards) {
                             searchQuery.clearText()
-                            expanded = false
                         }
                     },
                 )
             },
-            expanded = expanded,
-            onExpandedChange = { expanded = it },
+            expanded = false,
+            onExpandedChange = { },
             shape = SearchBarDefaults.inputFieldShape,
             tonalElevation = SearchBarDefaults.TonalElevation,
             shadowElevation = SearchBarDefaults.ShadowElevation,
             windowInsets = WindowInsets(0, 0, 0, 0),
             content = {
-                LazyColumn {
-                    items(cardPagingItems.itemCount) { index ->
-                        cardPagingItems[index]?.let { cardModel ->
-                            Card(
-                                name = cardModel.name,
-                                theory = cardModel.theory,
-                                exercises = cardModel.exercises
-                            ) {
-                                onCardClick(cardModel.id)
-                            }
-                        }
-                    }
 
-                    if (cardPagingItems.loadState.append is LoadState.Loading) {
-                        item {
-                            LazyItemProgressIndicator()
-                        }
-                    }
-                }
             },
         )
+
+        LazyColumn(modifier = Modifier.padding(top = 24.dp)) {
+            items(cardPagingItems.itemCount) { index ->
+                cardPagingItems[index]?.let { cardModel ->
+                    Card(
+                        name = cardModel.name,
+                        theory = cardModel.theory,
+                        exercises = cardModel.exercises
+                    ) {
+                        onCardClick(cardModel.id, cardModel.name)
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -145,6 +130,7 @@ private fun HomeScreen(
 @Composable
 private fun HomeTopBar(scrollBehavior: TopAppBarScrollBehavior) {
     MediumTopAppBar(
+        modifier = Modifier.padding(start = 24.dp),
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.Transparent,
             scrolledContainerColor = Color.Transparent,
@@ -153,7 +139,6 @@ private fun HomeTopBar(scrollBehavior: TopAppBarScrollBehavior) {
         title = {
             Text(
                 text = stringResource(id = R.string.home),
-                modifier = Modifier.fillMaxWidth(),
                 style = MaterialTheme.typography.headlineLarge
             )
         },
@@ -180,23 +165,6 @@ private fun SearchBarTrailingIcon(isLoadingCards: Boolean, onSearchTrailingIconC
     }
 }
 
-@Composable
-private fun LazyItemProgressIndicator() {
-    Column(
-        modifier = Modifier
-            .padding(top = 8.dp, bottom = 16.dp)
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        CircularProgressIndicator(
-            modifier = Modifier
-                .size(44.dp),
-            color = Color.White
-        )
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
@@ -217,14 +185,5 @@ fun SearchBarTrailingIconIsLoadingPreview() {
 fun SearchBarTrailingIconIsNotLoadingPreview() {
     DSLearnTheme {
         SearchBarTrailingIcon(isLoadingCards = false) { }
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun LazyItemProgressIndicatorPreview() {
-    DSLearnTheme {
-        LazyItemProgressIndicator()
     }
 }

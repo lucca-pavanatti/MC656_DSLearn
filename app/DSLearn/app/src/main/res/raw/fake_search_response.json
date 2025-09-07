@@ -1,0 +1,39 @@
+{
+  "resultCount": 2,
+  "results": [
+    {
+      "id": 1,
+      "name": "Array",
+      "theory": "Um array é uma coleção de itens armazenados em locais de memória contíguos.",
+      "exercises": [
+        {
+          "id": 101,
+          "title": "Two Sum",
+          "difficult": "EASY"
+        },
+        {
+          "id": 102,
+          "title": "Rotate Array",
+          "difficult": "MEDIUM"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "String",
+      "theory": "Strings são sequências de caracteres usadas para representar texto.",
+      "exercises": [
+        {
+          "id": 201,
+          "title": "Valid Palindrome",
+          "difficult": "EASY"
+        },
+        {
+          "id": 202,
+          "title": "Longest Substring Without Repeating Characters",
+          "difficult": "HARD"
+        }
+      ]
+    }
+  ]
+}

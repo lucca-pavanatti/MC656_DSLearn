@@ -2,9 +2,7 @@ package com.unicamp.dslearn.presentation.composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,30 +22,22 @@ fun Card(
     exercises: List<ExercisesModel>,
     onCardClick: () -> Unit
 ) {
-
-    Row(
+    Column(
         modifier = modifier
             .fillMaxWidth()
-            .height(60.dp)
             .clickable { onCardClick() }
-            .padding(vertical = 8.dp, horizontal = 24.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(vertical = 12.dp, horizontal = 24.dp),
     ) {
-        Column(
-            modifier = Modifier
-                .padding(start = 16.dp)
-        ) {
-            Text(
-                maxLines = 1,
-                text = name,
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                modifier = Modifier.padding(top = 4.dp),
-                text = theory,
-                style = MaterialTheme.typography.labelMedium
-            )
-        }
+        Text(
+            maxLines = 1,
+            text = name,
+            style = MaterialTheme.typography.bodyLarge
+        )
+        Text(
+            modifier = Modifier.padding(top = 4.dp),
+            text = theory,
+            style = MaterialTheme.typography.labelMedium
+        )
     }
 }
 

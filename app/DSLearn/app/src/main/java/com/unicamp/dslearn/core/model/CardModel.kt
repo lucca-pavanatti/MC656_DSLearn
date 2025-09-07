@@ -13,9 +13,9 @@ data class ExercisesModel(
     val difficult: Difficult,
 )
 
-enum class Difficult(name: String) {
-    Easy("EASY"),
-    Medium("MEDIUM"),
-    Hard("HARD")
+enum class Difficult {
+    EASY,
+    MEDIUM,
+    HARD
 }
 
