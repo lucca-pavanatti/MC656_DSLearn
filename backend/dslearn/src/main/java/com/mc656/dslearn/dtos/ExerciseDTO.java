@@ -15,7 +15,6 @@ public class ExerciseDTO {
     private Long id;
     private String title;
     private String url;
-    private String leetcodeUrl;
     private String difficulty;
     private List<String> companies;
 }

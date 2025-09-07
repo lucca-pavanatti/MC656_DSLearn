@@ -1,4 +1,4 @@
-package com.mc656.dslearn.models;
+package com.mc656.dslearn.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class DataStructure {
+public class DataStructureDetailDTO {
     private String name;
     private String theory;
-    private List<Exercise> exercises;
+    private List<ExerciseDTO> exercises;
 }
