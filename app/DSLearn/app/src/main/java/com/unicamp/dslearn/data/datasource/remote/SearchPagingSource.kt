@@ -1,9 +1,9 @@
-package com.unicamp.dslearn.data.dasource.remote
+package com.unicamp.dslearn.data.datasource.remote
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.unicamp.dslearn.data.dasource.remote.api.SearchApi
-import com.unicamp.dslearn.data.dasource.remote.dto.SearchCardResponseDTO
+import com.unicamp.dslearn.data.datasource.remote.api.SearchApi
+import com.unicamp.dslearn.data.datasource.remote.dto.SearchCardResponseDTO
 import com.unicamp.dslearn.data.fold
 import retrofit2.HttpException
 

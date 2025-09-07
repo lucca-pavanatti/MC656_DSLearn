@@ -3,8 +3,8 @@ package com.unicamp.dslearn.data.repository
 import com.unicamp.dslearn.core.model.CardModel
 import com.unicamp.dslearn.core.model.Difficult
 import com.unicamp.dslearn.core.model.ExercisesModel
-import com.unicamp.dslearn.data.dasource.remote.dto.ExercisesResponseDTO
-import com.unicamp.dslearn.data.dasource.remote.dto.SearchCardResponseDTO
+import com.unicamp.dslearn.data.datasource.remote.dto.ExercisesResponseDTO
+import com.unicamp.dslearn.data.datasource.remote.dto.SearchCardResponseDTO
 
 fun SearchCardResponseDTO.toModel() =
     CardModel(

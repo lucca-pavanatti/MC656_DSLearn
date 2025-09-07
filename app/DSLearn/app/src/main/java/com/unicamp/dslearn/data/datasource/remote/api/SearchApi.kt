@@ -1,6 +1,6 @@
-package com.unicamp.dslearn.data.dasource.remote.api
+package com.unicamp.dslearn.data.datasource.remote.api
 
-import com.unicamp.dslearn.data.dasource.remote.dto.SearchResponseDTO
+import com.unicamp.dslearn.data.datasource.remote.dto.SearchResponseDTO
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

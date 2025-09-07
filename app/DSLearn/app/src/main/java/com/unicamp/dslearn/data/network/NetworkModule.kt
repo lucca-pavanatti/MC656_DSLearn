@@ -1,6 +1,6 @@
 package com.unicamp.dslearn.data.network
 
-import com.unicamp.dslearn.data.dasource.remote.api.SearchApi
+import com.unicamp.dslearn.data.datasource.remote.api.SearchApi
 import com.unicamp.dslearn.data.network.fake.FakeResponseInterceptor
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType

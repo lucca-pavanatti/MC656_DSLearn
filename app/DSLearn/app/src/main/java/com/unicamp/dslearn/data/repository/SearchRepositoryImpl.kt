@@ -5,9 +5,9 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.unicamp.dslearn.core.model.CardModel
-import com.unicamp.dslearn.data.dasource.remote.SearchPagingSource
-import com.unicamp.dslearn.data.dasource.remote.SearchPagingSource.Companion.SEARCH_PAGE_SIZE
-import com.unicamp.dslearn.data.dasource.remote.api.SearchApi
+import com.unicamp.dslearn.data.datasource.remote.SearchPagingSource
+import com.unicamp.dslearn.data.datasource.remote.SearchPagingSource.Companion.SEARCH_PAGE_SIZE
+import com.unicamp.dslearn.data.datasource.remote.api.SearchApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

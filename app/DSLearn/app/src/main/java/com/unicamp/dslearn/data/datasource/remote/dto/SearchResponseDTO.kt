@@ -1,4 +1,4 @@
-package com.unicamp.dslearn.data.dasource.remote.dto
+package com.unicamp.dslearn.data.datasource.remote.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
