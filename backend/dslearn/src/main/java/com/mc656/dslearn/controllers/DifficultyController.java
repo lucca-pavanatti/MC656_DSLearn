@@ -19,12 +19,12 @@ public class ExerciseController {
         this.exerciseService = exerciseService;
     }
 
-    // GET /api/exercises/{difficulty}
+    // GET /api/exercises/EASY
     @GetMapping("/{difficulty}")
-    public ResponseEntity<List<ExerciseDTO>> getExercisesByDifficulty(
-            @PathVariable String difficulty
+    public ResponseEntity<List<Exercise>> getExercisesByDifficulty(
+            @PathVariable Difficulty difficulty
     ) {
-        List<ExerciseDTO> exercises = exerciseService.findByDifficulty(difficulty);
+        List<Exercise> exercises = exerciseService.findByDifficulty(difficulty);
 
         if (exercises.isEmpty()) {
             return ResponseEntity.notFound().build();
