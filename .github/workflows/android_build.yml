@@ -28,6 +28,9 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
+      - name: List files in working directory
+        run: ls -la
+
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
 
@@ -41,7 +44,7 @@ jobs:
         run: ./gradlew assembleRelease
 
       - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v
         with:
           name: DSLearn-release.apk
           path: app/build/outputs/apk/release/app-release.apk
