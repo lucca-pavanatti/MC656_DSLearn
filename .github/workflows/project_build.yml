@@ -7,7 +7,7 @@ on:
 
 jobs:
   android:
-    uses: ./android_build.yml
+    uses: ./.github/workflows/android_build.yml
 
   backend:
-    uses: ./backend_build.yml
+    uses: ./.github/workflows/backend_build.yml
