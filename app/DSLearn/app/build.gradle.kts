@@ -44,11 +44,27 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    afterEvaluate {
+        tasks.withType<Test>().configureEach {
+            if (name.contains("ReleaseUnitTest")) {
+                filter {
+                    excludeTestsMatching("com.unicamp.dslearn.presentation.home.HomeScreenTest")
+                }
+            }
+        }
+    }
+
 }
 
 dependencies {
@@ -73,13 +89,14 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.paging.runtime.ktx)
 
+    testImplementation(libs.androidx.paging.testing)
+    testImplementation(libs.androidx.ui.test.junit4)
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockk)
     testImplementation(libs.okhttp.mockwebserver)
-    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
-    testImplementation(libs.androidx.paging.testing)
-
+    testImplementation(libs.robolectric)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

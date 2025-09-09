@@ -25,7 +25,7 @@ jobs:
       - name: Setup Java JDK
         uses: actions/setup-java@v4.0.0
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'adopt'
 
       - name: Change wrapper permissions
@@ -47,4 +47,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: DSLearn-release.apk
-          path: app/build/outputs/apk/release/*.apk
+          path: ${{ github.workspace }}/app/DSLearn/app/build/outputs/apk/release/*.apk
