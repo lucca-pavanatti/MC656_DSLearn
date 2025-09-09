@@ -18,5 +18,6 @@ public class Exercise {
     private String title;
     private String url;
     private Difficulty difficulty;
+    private List<String> relatedTopics;
     private List<String> companies;
 }

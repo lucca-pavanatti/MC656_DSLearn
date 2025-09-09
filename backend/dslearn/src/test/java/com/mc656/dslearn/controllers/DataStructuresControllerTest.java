@@ -43,7 +43,6 @@ public class DataStructuresControllerTest {
                 .id(1L)
                 .title("Two Sum")
                 .url("https://leetcode.com/problems/two-sum/")
-                .leetcodeUrl("https://leetcode.com/problems/two-sum/")
                 .difficulty("Easy")
                 .companies(Arrays.asList("Amazon", "Google", "Microsoft"))
                 .build(),
@@ -51,7 +50,6 @@ public class DataStructuresControllerTest {
                 .id(2L)
                 .title("Valid Parentheses")
                 .url("https://leetcode.com/problems/valid-parentheses/")
-                .leetcodeUrl("https://leetcode.com/problems/valid-parentheses/")
                 .difficulty("Easy")
                 .companies(Arrays.asList("Facebook", "Amazon"))
                 .build()
