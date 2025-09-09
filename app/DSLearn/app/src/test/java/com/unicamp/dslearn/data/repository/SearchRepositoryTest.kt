@@ -95,11 +95,11 @@ class SearchRepositoryTest {
                 )
             )
 
-        val items = repository.searchByQuery("").asSnapshot {
+        val searchByQueryResultList = repository.searchByQuery("").asSnapshot {
             scrollTo(SEARCH_PAGE_SIZE * 2)
         }
 
-        assertEquals(8, items.size)
-        assertEquals(items[0], expectedCardModel)
+        assertEquals(8, searchByQueryResultList.size)
+        assertEquals(expectedCardModel, searchByQueryResultList[0])
     }
 }
