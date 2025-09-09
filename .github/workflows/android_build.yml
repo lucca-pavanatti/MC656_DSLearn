@@ -1,0 +1,51 @@
+name: Android Build
+
+on:
+  workflow_call:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "app/**"
+  push:
+    branches: ["main"]
+    paths:
+      - "app/**"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app/DSLearn
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4.0.0
+        with:
+          java-version: '21'
+          distribution: 'adopt'
+
+      - name: Change wrapper permissions
+        run: chmod +x ./gradlew
+
+      - name: Build app with gradle
+        run: ./gradlew build
+
+      - name: Run tests
+        run: ./gradlew test
+
+      - name: Build Release APK
+        run: ./gradlew assembleRelease
+  
+      - name: Find APKs
+        run: find app/build/outputs -name "*.apk"
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: DSLearn-release.apk
+          path: ${{ github.workspace }}/app/DSLearn/app/build/outputs/apk/release/*.apk
