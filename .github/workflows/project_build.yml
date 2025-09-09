@@ -1,0 +1,13 @@
+name: Build Android and Backend
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: ["main"]
+
+jobs:
+  android:
+    uses: ./android_build.yml
+
+  backend:
+    uses: ./backend_build.yml
