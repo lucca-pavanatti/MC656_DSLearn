@@ -39,10 +39,9 @@ jobs:
 
       - name: Build Release APK
         run: ./gradlew assembleRelease
-
-        
-      - name: List file tree
-        run: tree .
+  
+      - name: Find APKs
+        run: find app/build/outputs -name "*.apk"
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4
