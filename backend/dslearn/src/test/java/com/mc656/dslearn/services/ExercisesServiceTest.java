@@ -4,6 +4,7 @@ import com.mc656.dslearn.dtos.ExerciseDTO;
 import com.mc656.dslearn.mappers.ExerciseMapper;
 import com.mc656.dslearn.models.Exercise;
 import com.mc656.dslearn.models.enums.Difficulty;
+import com.mc656.dslearn.repositories.ExerciseRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +27,9 @@ class ExercisesServiceTest {
     @Mock
     private ExerciseMapper exerciseMapper;
 
+    @Mock
+    private ExerciseRepository exerciseRepository;
+
     @InjectMocks
     private ExercisesService exercisesService;
 
@@ -41,7 +45,7 @@ class ExercisesServiceTest {
                 .title("Two Sum")
                 .url("https://leetcode.com/problems/two-sum/")
                 .difficulty("Easy")
-                .companies(Arrays.asList("Google", "Facebook", "Amazon"))
+                .companies("Google,Facebook,Amazon")
                 .build();
 
         mediumStackExerciseDTO = ExerciseDTO.builder()
@@ -49,7 +53,7 @@ class ExercisesServiceTest {
                 .title("Evaluate Reverse Polish Notation")
                 .url("https://leetcode.com/problems/evaluate-reverse-polish-notation/")
                 .difficulty("Medium")
-                .companies(Arrays.asList("LinkedIn", "Google"))
+                .companies("Google,Facebook,Amazon")
                 .build();
 
         easyStackExerciseDTO = ExerciseDTO.builder()
@@ -57,102 +61,101 @@ class ExercisesServiceTest {
                 .title("Valid Parentheses")
                 .url("https://leetcode.com/problems/valid-parentheses/")
                 .difficulty("Easy")
-                .companies(Arrays.asList("Google", "Amazon", "Facebook"))
+                .companies("Google,Facebook,Amazon")
                 .build();
 
         sampleExerciseDTOs = Arrays.asList(easyArrayExerciseDTO, mediumStackExerciseDTO, easyStackExerciseDTO);
     }
     @Test
     void findExercises_shouldReturnOnlyEasyExercises() {
-        List<ExerciseDTO> easyExercises = Arrays.asList(easyArrayExerciseDTO, easyStackExerciseDTO);
-        when(exerciseMapper.toDtoList(anyList())).thenReturn(easyExercises);
+        List<Exercise> easyExercises = Arrays.asList(
+                Exercise.builder().id(1L).difficulty(Difficulty.Easy).relatedTopics("Array").companies("Google,Facebook,Amazon").build(),
+                Exercise.builder().id(20L).difficulty(Difficulty.Easy).relatedTopics("Stack").companies("Google,Facebook,Amazon").build()
+        );
+        when(exerciseRepository.findByFilters(Difficulty.Easy, null, null)).thenReturn(easyExercises);
+        when(exerciseMapper.toDtoList(easyExercises)).thenReturn(Arrays.asList(easyArrayExerciseDTO, easyStackExerciseDTO));
 
-        List<ExerciseDTO> result = exercisesService.findExercises(Difficulty.Easy, null);
+        List<ExerciseDTO> result = exercisesService.findExercises("Easy", null, null);
 
         assertNotNull(result);
         assertEquals(2, result.size());
-
-        verify(exerciseMapper, times(1)).toDtoList(argThat(exercises -> {
-            List<Exercise> exerciseList = (List<Exercise>) exercises;
-            return exerciseList.stream().allMatch(ex -> ex.getDifficulty() == Difficulty.Easy);
-        }));
+        verify(exerciseRepository, times(1)).findByFilters(Difficulty.Easy, null, null);
+        verify(exerciseMapper, times(1)).toDtoList(easyExercises);
     }
 
     @Test
     void findExercises_shouldReturnEmptyListForHardDifficulty() {
-        when(exerciseMapper.toDtoList(anyList())).thenReturn(Collections.emptyList());
+        when(exerciseRepository.findByFilters(Difficulty.Hard, null, null)).thenReturn(Collections.emptyList());
+        when(exerciseMapper.toDtoList(Collections.emptyList())).thenReturn(Collections.emptyList());
 
-        List<ExerciseDTO> result = exercisesService.findExercises(Difficulty.Hard, null);
+        List<ExerciseDTO> result = exercisesService.findExercises("Hard", null, null);
 
         assertNotNull(result);
         assertTrue(result.isEmpty());
-
-        verify(exerciseMapper, times(1)).toDtoList(argThat(exercises -> {
-            List<Exercise> exerciseList = (List<Exercise>) exercises;
-            return exerciseList.isEmpty();
-        }));
+        verify(exerciseRepository, times(1)).findByFilters(Difficulty.Hard, null, null);
+        verify(exerciseMapper, times(1)).toDtoList(Collections.emptyList());
     }
 
     @Test
     void findExercises_shouldReturnExercisesForSpecificDataStructure() {
-        List<ExerciseDTO> arrayExercises = Collections.singletonList(easyArrayExerciseDTO);
-        when(exerciseMapper.toDtoList(anyList())).thenReturn(arrayExercises);
+        List<Exercise> arrayExercises = Collections.singletonList(
+                Exercise.builder().id(1L).difficulty(Difficulty.Easy).relatedTopics("Array").companies("Google,Facebook,Amazon").build()
+        );
+        when(exerciseRepository.findByFilters(null, "array", null)).thenReturn(arrayExercises);
+        when(exerciseMapper.toDtoList(arrayExercises)).thenReturn(Collections.singletonList(easyArrayExerciseDTO));
 
-        List<ExerciseDTO> result = exercisesService.findExercises(null, "array");
+        List<ExerciseDTO> result = exercisesService.findExercises(null, "array", null);
 
         assertNotNull(result);
         assertEquals(1, result.size());
-
-        verify(exerciseMapper, times(1)).toDtoList(argThat(exercises -> {
-            List<Exercise> exerciseList = (List<Exercise>) exercises;
-            return exerciseList.stream().allMatch(ex ->
-                    ex.getRelatedTopics().stream().anyMatch(topic -> topic.equalsIgnoreCase("array"))
-            );
-        }));
+        verify(exerciseRepository, times(1)).findByFilters(null, "array", null);
+        verify(exerciseMapper, times(1)).toDtoList(arrayExercises);
     }
 
     @Test
     void findExercises_shouldReturnAllExercisesWhenNoFilter() {
-        when(exerciseMapper.toDtoList(anyList())).thenReturn(sampleExerciseDTOs);
+        List<Exercise> allExercises = Arrays.asList(
+                Exercise.builder().id(1L).difficulty(Difficulty.Easy).relatedTopics("Array").companies("Google,Facebook,Amazon").build(),
+                Exercise.builder().id(150L).difficulty(Difficulty.Medium).relatedTopics("Stack").companies("Google,Facebook,Amazon").build(),
+                Exercise.builder().id(20L).difficulty(Difficulty.Easy).relatedTopics("Stack").companies("Google,Facebook,Amazon").build()
+        );
+        when(exerciseRepository.findByFilters(null, null, null)).thenReturn(allExercises);
+        when(exerciseMapper.toDtoList(allExercises)).thenReturn(sampleExerciseDTOs);
 
-        List<ExerciseDTO> result = exercisesService.findExercises(null, null);
+        List<ExerciseDTO> result = exercisesService.findExercises(null, null, null);
 
         assertNotNull(result);
         assertEquals(3, result.size());
-        verify(exerciseMapper, times(1)).toDtoList(anyList());
+        verify(exerciseRepository, times(1)).findByFilters(null, null, null);
+        verify(exerciseMapper, times(1)).toDtoList(allExercises);
     }
 
     @Test
     void findExercises_shouldReturnEmptyListForUnknownDataStructure() {
-        when(exerciseMapper.toDtoList(anyList())).thenReturn(Collections.emptyList());
+        when(exerciseRepository.findByFilters(null, "NonExistentStructure", null)).thenReturn(Collections.emptyList());
+        when(exerciseMapper.toDtoList(Collections.emptyList())).thenReturn(Collections.emptyList());
 
-        List<ExerciseDTO> result = exercisesService.findExercises(null, "NonExistentStructure");
+        List<ExerciseDTO> result = exercisesService.findExercises(null, "NonExistentStructure", null);
 
         assertNotNull(result);
         assertTrue(result.isEmpty());
-
-        verify(exerciseMapper, times(1)).toDtoList(argThat(exercises -> {
-            List<Exercise> exerciseList = (List<Exercise>) exercises;
-            return exerciseList.isEmpty();
-        }));
+        verify(exerciseRepository, times(1)).findByFilters(null, "NonExistentStructure", null);
+        verify(exerciseMapper, times(1)).toDtoList(Collections.emptyList());
     }
 
     @Test
     void testFindExercises_WithBothFilters_ReturnsFilteredExercises() {
-        List<ExerciseDTO> filteredExercises = Collections.singletonList(easyStackExerciseDTO);
-        when(exerciseMapper.toDtoList(anyList())).thenReturn(filteredExercises);
+        List<Exercise> filteredExercises = Collections.singletonList(
+                Exercise.builder().id(20L).difficulty(Difficulty.Easy).relatedTopics("Stack").companies("Amazon").build()
+        );
+        when(exerciseRepository.findByFilters(Difficulty.Easy, "Stack", "Amazon")).thenReturn(filteredExercises);
+        when(exerciseMapper.toDtoList(filteredExercises)).thenReturn(Collections.singletonList(easyStackExerciseDTO));
 
-        List<ExerciseDTO> result = exercisesService.findExercises(Difficulty.Easy, "Stack");
+        List<ExerciseDTO> result = exercisesService.findExercises("Easy", "Stack", "Amazon");
 
         assertNotNull(result);
         assertEquals(1, result.size());
-
-        verify(exerciseMapper, times(1)).toDtoList(argThat(exercises -> {
-            List<Exercise> exerciseList = (List<Exercise>) exercises;
-            return exerciseList.stream().allMatch(ex ->
-                    ex.getDifficulty() == Difficulty.Easy &&
-                            ex.getRelatedTopics().stream().anyMatch(topic -> topic.equalsIgnoreCase("Stack"))
-            );
-        }));
+        verify(exerciseRepository, times(1)).findByFilters(Difficulty.Easy, "Stack", "Amazon");
+        verify(exerciseMapper, times(1)).toDtoList(filteredExercises);
     }
 }

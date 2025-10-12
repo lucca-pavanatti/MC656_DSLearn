@@ -16,5 +16,6 @@ public class ExerciseDTO {
     private String title;
     private String url;
     private String difficulty;
-    private List<String> companies;
+    private String relatedTopics;
+    private String companies;
 }

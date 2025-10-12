@@ -39,21 +39,21 @@ public class DataStructuresServiceTest {
                 .title("Two Sum")
                 .url("https://leetcode.com/problems/two-sum/")
                 .difficulty("EASY")
-                .companies(List.of("Google", "Facebook", "Amazon", "Microsoft"))
+                .companies("Google,Facebook,Amazon,Microsoft")
                 .build(),
             ExerciseDTO.builder()
                 .id(11L)
                 .title("Container With Most Water")
                 .url("https://leetcode.com/problems/container-with-most-water/")
                 .difficulty("MEDIUM")
-                .companies(List.of("Google", "Facebook", "Bloomberg"))
+                .companies("Google,Facebook,Bloomberg")
                 .build(),
             ExerciseDTO.builder()
                 .id(15L)
                 .title("3Sum")
                 .url("https://leetcode.com/problems/3sum/")
                 .difficulty("MEDIUM")
-                .companies(List.of("Facebook", "Microsoft", "Amazon"))
+                .companies("Facebook,Microsoft,Amazon")
                 .build()
         );
 
@@ -69,21 +69,21 @@ public class DataStructuresServiceTest {
                 .title("Valid Parentheses")
                 .url("https://leetcode.com/problems/valid-parentheses/")
                 .difficulty("EASY")
-                .companies(List.of("Google", "Amazon", "Facebook", "Uber"))
+                .companies("Google,Amazon,Facebook,Uber")
                 .build(),
             ExerciseDTO.builder()
                 .id(155L)
                 .title("Min Stack")
                 .url("https://leetcode.com/problems/min-stack/")
                 .difficulty("EASY")
-                .companies(List.of("Amazon", "Bloomberg", "Uber"))
+                .companies("Amazon,Bloomberg,Uber")
                 .build(),
             ExerciseDTO.builder()
                 .id(150L)
                 .title("Evaluate Reverse Polish Notation")
                 .url("https://leetcode.com/problems/evaluate-reverse-polish-notation/")
                 .difficulty("MEDIUM")
-                .companies(List.of("LinkedIn", "Google"))
+                .companies("LinkedIn,Google")
                 .build()
         );
 

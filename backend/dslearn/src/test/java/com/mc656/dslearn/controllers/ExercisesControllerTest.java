@@ -43,18 +43,18 @@ public class ExercisesControllerTest {
                 .title("Two Sum")
                 .url("https://leetcode.com/problems/two-sum/")
                 .difficulty("Easy")
-                .companies(Arrays.asList("Google", "Facebook", "Amazon"))
+                .companies("Google,Facebook,Amazon")
                 .build(),
             ExerciseDTO.builder()
                 .id(20L)
                 .title("Valid Parentheses")
                 .url("https://leetcode.com/problems/valid-parentheses/")
                 .difficulty("Easy")
-                .companies(Arrays.asList("Google", "Amazon", "Facebook"))
+                .companies("Google,Facebook,Amazon")
                 .build()
         );
 
-        when(exercisesService.findExercises(Difficulty.Easy, null)).thenReturn(easyExercises);
+        when(exercisesService.findExercises("Easy", null, null)).thenReturn(easyExercises);
 
         mockMvc.perform(get("/api/exercises")
                 .param("difficulty", "Easy"))
@@ -64,6 +64,6 @@ public class ExercisesControllerTest {
             .andExpect(jsonPath("$[0].difficulty").value("Easy"))
             .andExpect(jsonPath("$[1].difficulty").value("Easy"));
 
-        verify(exercisesService, times(1)).findExercises(Difficulty.Easy, null);
+        verify(exercisesService, times(1)).findExercises("Easy", null, null);
     }
 }

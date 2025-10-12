@@ -18,10 +18,11 @@ public class ExercisesController {
 
     @GetMapping
     public ResponseEntity<List<ExerciseDTO>> getExercises(
-            @RequestParam(name = "difficulty", required = false) Difficulty difficulty,
-            @RequestParam(name = "dataStructure", required = false) String dataStructure) {
+            @RequestParam(name = "difficulty", required = false) String difficulty,
+            @RequestParam(name = "dataStructure", required = false) String dataStructure,
+            @RequestParam(name = "company", required = false) String company) {
 
-        List<ExerciseDTO> exercises = exerciseService.findExercises(difficulty, dataStructure);
+        List<ExerciseDTO> exercises = exerciseService.findExercises(difficulty, dataStructure, company);
         return ResponseEntity.ok(exercises);
     }
 }
