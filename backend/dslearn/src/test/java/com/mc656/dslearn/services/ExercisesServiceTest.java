@@ -1,6 +1,7 @@
 package com.mc656.dslearn.services;
 
 import com.mc656.dslearn.dtos.ExerciseDTO;
+import com.mc656.dslearn.dtos.PagedResponseDTO;
 import com.mc656.dslearn.mappers.ExerciseMapper;
 import com.mc656.dslearn.models.Exercise;
 import com.mc656.dslearn.models.enums.Difficulty;
@@ -11,14 +12,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -67,95 +72,177 @@ class ExercisesServiceTest {
         sampleExerciseDTOs = Arrays.asList(easyArrayExerciseDTO, mediumStackExerciseDTO, easyStackExerciseDTO);
     }
     @Test
-    void findExercises_shouldReturnOnlyEasyExercises() {
+    void findExercisesPaginated_shouldReturnOnlyEasyExercises() {
         List<Exercise> easyExercises = Arrays.asList(
                 Exercise.builder().id(1L).difficulty(Difficulty.Easy).relatedTopics("Array").companies("Google,Facebook,Amazon").build(),
                 Exercise.builder().id(20L).difficulty(Difficulty.Easy).relatedTopics("Stack").companies("Google,Facebook,Amazon").build()
         );
-        when(exerciseRepository.findByFilters(Difficulty.Easy, null, null)).thenReturn(easyExercises);
+        
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "id"));
+        Page<Exercise> exercisePage = new PageImpl<>(easyExercises, pageable, easyExercises.size());
+        
+        when(exerciseRepository.findByFiltersPageable(eq(Difficulty.Easy), isNull(), isNull(), any(Pageable.class)))
+                .thenReturn(exercisePage);
         when(exerciseMapper.toDtoList(easyExercises)).thenReturn(Arrays.asList(easyArrayExerciseDTO, easyStackExerciseDTO));
 
-        List<ExerciseDTO> result = exercisesService.findExercises("Easy", null, null);
+        PagedResponseDTO<ExerciseDTO> result = exercisesService.findExercisesPaginated("Easy", null, null, 0, 10, "id", "asc");
 
         assertNotNull(result);
-        assertEquals(2, result.size());
-        verify(exerciseRepository, times(1)).findByFilters(Difficulty.Easy, null, null);
+        assertEquals(2, result.getContent().size());
+        assertEquals(0, result.getPage());
+        assertEquals(10, result.getSize());
+        assertEquals(2, result.getTotalElements());
+        verify(exerciseRepository, times(1)).findByFiltersPageable(eq(Difficulty.Easy), isNull(), isNull(), any(Pageable.class));
         verify(exerciseMapper, times(1)).toDtoList(easyExercises);
     }
 
     @Test
-    void findExercises_shouldReturnEmptyListForHardDifficulty() {
-        when(exerciseRepository.findByFilters(Difficulty.Hard, null, null)).thenReturn(Collections.emptyList());
+    void findExercisesPaginated_shouldReturnEmptyListForHardDifficulty() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "id"));
+        Page<Exercise> emptyPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
+        
+        when(exerciseRepository.findByFiltersPageable(eq(Difficulty.Hard), isNull(), isNull(), any(Pageable.class)))
+                .thenReturn(emptyPage);
         when(exerciseMapper.toDtoList(Collections.emptyList())).thenReturn(Collections.emptyList());
 
-        List<ExerciseDTO> result = exercisesService.findExercises("Hard", null, null);
+        PagedResponseDTO<ExerciseDTO> result = exercisesService.findExercisesPaginated("Hard", null, null, 0, 10, "id", "asc");
 
         assertNotNull(result);
-        assertTrue(result.isEmpty());
-        verify(exerciseRepository, times(1)).findByFilters(Difficulty.Hard, null, null);
+        assertTrue(result.getContent().isEmpty());
+        assertEquals(0, result.getTotalElements());
+        verify(exerciseRepository, times(1)).findByFiltersPageable(eq(Difficulty.Hard), isNull(), isNull(), any(Pageable.class));
         verify(exerciseMapper, times(1)).toDtoList(Collections.emptyList());
     }
 
     @Test
-    void findExercises_shouldReturnExercisesForSpecificDataStructure() {
+    void findExercisesPaginated_shouldReturnExercisesForSpecificDataStructure() {
         List<Exercise> arrayExercises = Collections.singletonList(
                 Exercise.builder().id(1L).difficulty(Difficulty.Easy).relatedTopics("Array").companies("Google,Facebook,Amazon").build()
         );
-        when(exerciseRepository.findByFilters(null, "array", null)).thenReturn(arrayExercises);
+        
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "id"));
+        Page<Exercise> exercisePage = new PageImpl<>(arrayExercises, pageable, arrayExercises.size());
+        
+        when(exerciseRepository.findByFiltersPageable(isNull(), eq("array"), isNull(), any(Pageable.class)))
+                .thenReturn(exercisePage);
         when(exerciseMapper.toDtoList(arrayExercises)).thenReturn(Collections.singletonList(easyArrayExerciseDTO));
 
-        List<ExerciseDTO> result = exercisesService.findExercises(null, "array", null);
+        PagedResponseDTO<ExerciseDTO> result = exercisesService.findExercisesPaginated(null, "array", null, 0, 10, "id", "asc");
 
         assertNotNull(result);
-        assertEquals(1, result.size());
-        verify(exerciseRepository, times(1)).findByFilters(null, "array", null);
+        assertEquals(1, result.getContent().size());
+        assertEquals(1, result.getTotalElements());
+        verify(exerciseRepository, times(1)).findByFiltersPageable(isNull(), eq("array"), isNull(), any(Pageable.class));
         verify(exerciseMapper, times(1)).toDtoList(arrayExercises);
     }
 
     @Test
-    void findExercises_shouldReturnAllExercisesWhenNoFilter() {
+    void findExercisesPaginated_shouldReturnAllExercisesWhenNoFilter() {
         List<Exercise> allExercises = Arrays.asList(
                 Exercise.builder().id(1L).difficulty(Difficulty.Easy).relatedTopics("Array").companies("Google,Facebook,Amazon").build(),
                 Exercise.builder().id(150L).difficulty(Difficulty.Medium).relatedTopics("Stack").companies("Google,Facebook,Amazon").build(),
                 Exercise.builder().id(20L).difficulty(Difficulty.Easy).relatedTopics("Stack").companies("Google,Facebook,Amazon").build()
         );
-        when(exerciseRepository.findByFilters(null, null, null)).thenReturn(allExercises);
+        
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "id"));
+        Page<Exercise> exercisePage = new PageImpl<>(allExercises, pageable, allExercises.size());
+        
+        when(exerciseRepository.findByFiltersPageable(isNull(), isNull(), isNull(), any(Pageable.class)))
+                .thenReturn(exercisePage);
         when(exerciseMapper.toDtoList(allExercises)).thenReturn(sampleExerciseDTOs);
 
-        List<ExerciseDTO> result = exercisesService.findExercises(null, null, null);
+        PagedResponseDTO<ExerciseDTO> result = exercisesService.findExercisesPaginated(null, null, null, 0, 10, "id", "asc");
 
         assertNotNull(result);
-        assertEquals(3, result.size());
-        verify(exerciseRepository, times(1)).findByFilters(null, null, null);
+        assertEquals(3, result.getContent().size());
+        assertEquals(3, result.getTotalElements());
+        verify(exerciseRepository, times(1)).findByFiltersPageable(isNull(), isNull(), isNull(), any(Pageable.class));
         verify(exerciseMapper, times(1)).toDtoList(allExercises);
     }
 
     @Test
-    void findExercises_shouldReturnEmptyListForUnknownDataStructure() {
-        when(exerciseRepository.findByFilters(null, "NonExistentStructure", null)).thenReturn(Collections.emptyList());
+    void findExercisesPaginated_shouldReturnEmptyListForUnknownDataStructure() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "id"));
+        Page<Exercise> emptyPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
+        
+        when(exerciseRepository.findByFiltersPageable(isNull(), eq("NonExistentStructure"), isNull(), any(Pageable.class)))
+                .thenReturn(emptyPage);
         when(exerciseMapper.toDtoList(Collections.emptyList())).thenReturn(Collections.emptyList());
 
-        List<ExerciseDTO> result = exercisesService.findExercises(null, "NonExistentStructure", null);
+        PagedResponseDTO<ExerciseDTO> result = exercisesService.findExercisesPaginated(null, "NonExistentStructure", null, 0, 10, "id", "asc");
 
         assertNotNull(result);
-        assertTrue(result.isEmpty());
-        verify(exerciseRepository, times(1)).findByFilters(null, "NonExistentStructure", null);
+        assertTrue(result.getContent().isEmpty());
+        assertEquals(0, result.getTotalElements());
+        verify(exerciseRepository, times(1)).findByFiltersPageable(isNull(), eq("NonExistentStructure"), isNull(), any(Pageable.class));
         verify(exerciseMapper, times(1)).toDtoList(Collections.emptyList());
     }
 
     @Test
-    void testFindExercises_WithBothFilters_ReturnsFilteredExercises() {
+    void testFindExercisesPaginated_WithBothFilters_ReturnsFilteredExercises() {
         List<Exercise> filteredExercises = Collections.singletonList(
                 Exercise.builder().id(20L).difficulty(Difficulty.Easy).relatedTopics("Stack").companies("Amazon").build()
         );
-        when(exerciseRepository.findByFilters(Difficulty.Easy, "Stack", "Amazon")).thenReturn(filteredExercises);
+        
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "id"));
+        Page<Exercise> exercisePage = new PageImpl<>(filteredExercises, pageable, filteredExercises.size());
+        
+        when(exerciseRepository.findByFiltersPageable(eq(Difficulty.Easy), eq("Stack"), eq("Amazon"), any(Pageable.class)))
+                .thenReturn(exercisePage);
         when(exerciseMapper.toDtoList(filteredExercises)).thenReturn(Collections.singletonList(easyStackExerciseDTO));
 
-        List<ExerciseDTO> result = exercisesService.findExercises("Easy", "Stack", "Amazon");
+        PagedResponseDTO<ExerciseDTO> result = exercisesService.findExercisesPaginated("Easy", "Stack", "Amazon", 0, 10, "id", "asc");
 
         assertNotNull(result);
-        assertEquals(1, result.size());
-        verify(exerciseRepository, times(1)).findByFilters(Difficulty.Easy, "Stack", "Amazon");
+        assertEquals(1, result.getContent().size());
+        assertEquals(1, result.getTotalElements());
+        verify(exerciseRepository, times(1)).findByFiltersPageable(eq(Difficulty.Easy), eq("Stack"), eq("Amazon"), any(Pageable.class));
         verify(exerciseMapper, times(1)).toDtoList(filteredExercises);
+    }
+
+    @Test
+    void findExercisesPaginated_shouldReturnEmptyPageForInvalidDifficulty() {
+        PagedResponseDTO<ExerciseDTO> result = exercisesService.findExercisesPaginated("InvalidDifficulty", null, null, 0, 10, "id", "asc");
+
+        assertNotNull(result);
+        assertTrue(result.getContent().isEmpty());
+        assertEquals(0, result.getTotalElements());
+        assertEquals(0, result.getPage());
+        assertEquals(10, result.getSize());
+        assertTrue(result.isFirst());
+        assertTrue(result.isLast());
+        
+        // Verify that repository was not called for invalid difficulty
+        verify(exerciseRepository, never()).findByFiltersPageable(any(), any(), any(), any());
+        verify(exerciseMapper, never()).toDtoList(any());
+    }
+
+    @Test
+    void findExercisesPaginated_shouldHandleCustomPaginationAndSorting() {
+        List<Exercise> exercises = Collections.singletonList(
+                Exercise.builder().id(1L).difficulty(Difficulty.Easy).relatedTopics("Array").companies("Google").build()
+        );
+        
+        Pageable pageable = PageRequest.of(1, 5, Sort.by(Sort.Direction.DESC, "title"));
+        Page<Exercise> exercisePage = new PageImpl<>(exercises, pageable, 10);
+        
+        when(exerciseRepository.findByFiltersPageable(isNull(), isNull(), isNull(), any(Pageable.class)))
+                .thenReturn(exercisePage);
+        when(exerciseMapper.toDtoList(exercises)).thenReturn(Collections.singletonList(easyArrayExerciseDTO));
+
+        PagedResponseDTO<ExerciseDTO> result = exercisesService.findExercisesPaginated(null, null, null, 1, 5, "title", "desc");
+
+        assertNotNull(result);
+        assertEquals(1, result.getContent().size());
+        assertEquals(1, result.getPage());
+        assertEquals(5, result.getSize());
+        assertEquals(10, result.getTotalElements());
+        assertEquals(2, result.getTotalPages());
+        assertFalse(result.isFirst());
+        assertTrue(result.isLast());
+        
+        verify(exerciseRepository, times(1)).findByFiltersPageable(isNull(), isNull(), isNull(), 
+                argThat(p -> p.getPageNumber() == 1 && p.getPageSize() == 5 && 
+                            p.getSort().getOrderFor("title").getDirection() == Sort.Direction.DESC));
     }
 }
