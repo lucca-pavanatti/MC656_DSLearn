@@ -1,7 +1,7 @@
 package com.mc656.dslearn.controllers;
 
 import com.mc656.dslearn.dtos.ExerciseDTO;
-import com.mc656.dslearn.models.enums.Difficulty;
+import com.mc656.dslearn.dtos.PagedResponseDTO;
 import com.mc656.dslearn.services.ExercisesService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -43,27 +44,38 @@ public class ExercisesControllerTest {
                 .title("Two Sum")
                 .url("https://leetcode.com/problems/two-sum/")
                 .difficulty("Easy")
-                .companies(Arrays.asList("Google", "Facebook", "Amazon"))
+                .companies("Google,Facebook,Amazon")
                 .build(),
             ExerciseDTO.builder()
                 .id(20L)
                 .title("Valid Parentheses")
                 .url("https://leetcode.com/problems/valid-parentheses/")
                 .difficulty("Easy")
-                .companies(Arrays.asList("Google", "Amazon", "Facebook"))
+                .companies("Google,Facebook,Amazon")
                 .build()
         );
 
-        when(exercisesService.findExercises(Difficulty.Easy, null)).thenReturn(easyExercises);
+        PagedResponseDTO<ExerciseDTO> pagedResponse = new PagedResponseDTO<>(
+            easyExercises, 0, 10, 2, 1, true, true
+        );
+
+        when(exercisesService.findExercisesPaginated(eq("Easy"), eq(null), eq(null), 
+                eq(0), eq(10), eq("id"), eq("asc"))).thenReturn(pagedResponse);
 
         mockMvc.perform(get("/api/exercises")
                 .param("difficulty", "Easy"))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
-            .andExpect(jsonPath("$").isArray())
-            .andExpect(jsonPath("$[0].difficulty").value("Easy"))
-            .andExpect(jsonPath("$[1].difficulty").value("Easy"));
+            .andExpect(jsonPath("$.content").isArray())
+            .andExpect(jsonPath("$.content[0].difficulty").value("Easy"))
+            .andExpect(jsonPath("$.content[1].difficulty").value("Easy"))
+            .andExpect(jsonPath("$.page").value(0))
+            .andExpect(jsonPath("$.size").value(10))
+            .andExpect(jsonPath("$.totalElements").value(2))
+            .andExpect(jsonPath("$.totalPages").value(1))
+            .andExpect(jsonPath("$.first").value(true))
+            .andExpect(jsonPath("$.last").value(true));
 
-        verify(exercisesService, times(1)).findExercises(Difficulty.Easy, null);
+        verify(exercisesService, times(1)).findExercisesPaginated("Easy", null, null, 0, 10, "id", "asc");
     }
 }
