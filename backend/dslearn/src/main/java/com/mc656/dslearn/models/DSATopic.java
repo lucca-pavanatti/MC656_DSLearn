@@ -1,5 +1,6 @@
 package com.mc656.dslearn.models;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,8 +12,13 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DataStructure {
+@Entity
+@Table(name = "dsa_topic")
+public class DSATopic {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
-    private String theory;
-    private List<Exercise> exercises;
+    @Column(columnDefinition = "TEXT")
+    private String contentMarkdown;
 }
