@@ -5,14 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DataStructureDetailDTO {
+public class DSADetailDTO {
     private String name;
-    private String theory;
-    private List<ExerciseDTO> exercises;
+    private String contentMarkdown;
 }
