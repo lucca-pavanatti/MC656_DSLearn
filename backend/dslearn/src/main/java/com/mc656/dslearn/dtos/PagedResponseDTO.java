@@ -11,9 +11,9 @@ public class PagedResponseDTO<T> {
     private boolean first;
     private boolean last;
 
-    public PagedResponseDTO() {}
+    private PagedResponseDTO() {}
 
-    public PagedResponseDTO(List<T> content, int page, int size, long totalElements, int totalPages, boolean first, boolean last) {
+    private PagedResponseDTO(List<T> content, int page, int size, long totalElements, int totalPages, boolean first, boolean last) {
         this.content = content;
         this.page = page;
         this.size = size;
@@ -23,7 +23,10 @@ public class PagedResponseDTO<T> {
         this.last = last;
     }
 
-    // Getters and Setters
+    public static <T> PagedResponseDTOBuilder<T> builder() {
+        return new PagedResponseDTOBuilder<T>();
+    }
+
     public List<T> getContent() {
         return content;
     }
@@ -79,4 +82,55 @@ public class PagedResponseDTO<T> {
     public void setLast(boolean last) {
         this.last = last;
     }
+
+    public static class PagedResponseDTOBuilder<T> {
+
+        private List<T> content;
+        private int page;
+        private int size;
+        private long totalElements;
+        private int totalPages;
+        private boolean first;
+        private boolean last;
+
+        public PagedResponseDTOBuilder<T> content(List<T> content) {
+            this.content = content;
+            return this;
+        }
+
+        public PagedResponseDTOBuilder<T> page(int page) {
+            this.page = page;
+            return this;
+        }
+
+        public PagedResponseDTOBuilder<T> size(int size) {
+            this.size = size;
+            return this;
+        }
+
+        public PagedResponseDTOBuilder<T> totalElements(long totalElements) {
+            this.totalElements = totalElements;
+            return this;
+        }
+
+        public PagedResponseDTOBuilder<T> totalPages(int totalPages) {
+            this.totalPages = totalPages;
+            return this;
+        }
+
+        public PagedResponseDTOBuilder<T> first(boolean first) {
+            this.first = first;
+            return this;
+        }
+
+        public PagedResponseDTOBuilder<T> last(boolean last) {
+            this.last = last;
+            return this;
+        }
+
+        public PagedResponseDTO<T> build() {
+            return new PagedResponseDTO<>(content, page, size, totalElements, totalPages, first, last);
+        }
+    }
+
 }

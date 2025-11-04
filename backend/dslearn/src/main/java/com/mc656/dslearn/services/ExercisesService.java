@@ -39,9 +39,15 @@ public class ExercisesService {
                 diffEnum = Difficulty.valueOf(difficulty);
             } catch (IllegalArgumentException e) {
                 // Retorna página vazia para valores inválidos
-                return new PagedResponseDTO<>(
-                    List.of(), page, size, 0, 0, true, true
-                );
+                return PagedResponseDTO.<ExerciseDTO>builder()
+                        .content(List.of())
+                        .page(page)
+                        .size(size)
+                        .totalElements(0)
+                        .totalPages(0)
+                        .first(true)
+                        .last(true)
+                        .build();
             }
         }
 
@@ -66,14 +72,14 @@ public class ExercisesService {
 
         List<ExerciseDTO> exerciseDTOs = exerciseMapper.toDtoList(exercisePage.getContent());
 
-        return new PagedResponseDTO<>(
-                exerciseDTOs,
-                exercisePage.getNumber(),
-                exercisePage.getSize(),
-                exercisePage.getTotalElements(),
-                exercisePage.getTotalPages(),
-                exercisePage.isFirst(),
-                exercisePage.isLast()
-        );
+        return PagedResponseDTO.<ExerciseDTO>builder()
+                .content(exerciseDTOs)
+                .page(exercisePage.getNumber())
+                .size(exercisePage.getSize())
+                .totalElements(exercisePage.getTotalElements())
+                .totalPages(exercisePage.getTotalPages())
+                .first(exercisePage.isFirst())
+                .last(exercisePage.isLast())
+                .build();
     }
 }

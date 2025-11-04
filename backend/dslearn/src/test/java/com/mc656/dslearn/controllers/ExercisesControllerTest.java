@@ -55,9 +55,15 @@ public class ExercisesControllerTest {
                 .build()
         );
 
-        PagedResponseDTO<ExerciseDTO> pagedResponse = new PagedResponseDTO<>(
-            easyExercises, 0, 10, 2, 1, true, true
-        );
+        PagedResponseDTO<ExerciseDTO> pagedResponse = PagedResponseDTO.<ExerciseDTO>builder()
+                .content(easyExercises)
+                .page(0)
+                .size(10)
+                .totalElements(2)
+                .totalPages(1)
+                .first(true)
+                .last(true)
+                .build();
 
         when(exercisesService.findExercisesPaginated(eq("Easy"), eq(null), eq(null), 
                 eq(0), eq(10), eq("id"), eq("asc"))).thenReturn(pagedResponse);
