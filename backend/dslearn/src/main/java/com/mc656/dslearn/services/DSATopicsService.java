@@ -3,23 +3,22 @@ package com.mc656.dslearn.services;
 import com.mc656.dslearn.dtos.DSADetailDTO;
 import com.mc656.dslearn.mappers.DataStructureMapper;
 import com.mc656.dslearn.models.DSATopic;
-import com.mc656.dslearn.models.Exercise;
-import com.mc656.dslearn.models.enums.Difficulty;
 import com.mc656.dslearn.repositories.DSARepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Objects;
 
 @Service
 public class DSATopicsService {
-    @Autowired
+
     private DataStructureMapper dataStructureMapper;
 
-    @Autowired
     private DSARepository dsaRepository;
+
+    public DSATopicsService(DataStructureMapper dataStructureMapper, DSARepository dsaRepository) {
+        this.dataStructureMapper = dataStructureMapper;
+        this.dsaRepository = dsaRepository;
+    }
 
     public DSADetailDTO findDetailsByName(String name) {
         if (name == null) {

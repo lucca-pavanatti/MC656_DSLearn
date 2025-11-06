@@ -6,7 +6,6 @@ import com.mc656.dslearn.mappers.ExerciseMapper;
 import com.mc656.dslearn.models.Exercise;
 import com.mc656.dslearn.models.enums.Difficulty;
 import com.mc656.dslearn.repositories.ExerciseRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,11 +17,14 @@ import java.util.List;
 @Service
 public class ExercisesService {
 
-    @Autowired
     private ExerciseMapper exerciseMapper;
 
-    @Autowired
     private ExerciseRepository exerciseRepository;
+
+    public ExercisesService(ExerciseMapper exerciseMapper, ExerciseRepository exerciseRepository) {
+        this.exerciseMapper = exerciseMapper;
+        this.exerciseRepository = exerciseRepository;
+    }
 
     public PagedResponseDTO<ExerciseDTO> findExercisesPaginated(
             String difficulty, 

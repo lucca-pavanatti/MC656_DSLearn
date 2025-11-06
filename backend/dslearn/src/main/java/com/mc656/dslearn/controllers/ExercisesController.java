@@ -3,18 +3,18 @@ package com.mc656.dslearn.controllers;
 import com.mc656.dslearn.dtos.ExerciseDTO;
 import com.mc656.dslearn.dtos.PagedResponseDTO;
 import com.mc656.dslearn.services.ExercisesService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/exercises")
 public class ExercisesController {
 
-    @Autowired
     private ExercisesService exerciseService;
+
+    public ExercisesController(ExercisesService exerciseService) {
+        this.exerciseService = exerciseService;
+    }
 
     @GetMapping
     public ResponseEntity<PagedResponseDTO<ExerciseDTO>> getExercisesPaginated(

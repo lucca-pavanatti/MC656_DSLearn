@@ -2,7 +2,6 @@ package com.mc656.dslearn.controllers;
 
 import com.mc656.dslearn.dtos.DSADetailDTO;
 import com.mc656.dslearn.services.DSATopicsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,8 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/topics")
 public class DSATopicsController {
 
-    @Autowired
     private DSATopicsService dataStructureService;
+
+    public DSATopicsController(DSATopicsService dataStructureService) {
+        this.dataStructureService = dataStructureService;
+    }
 
     @GetMapping("/{name}")
     public ResponseEntity<DSADetailDTO> getTopicByName(@PathVariable String name) {
