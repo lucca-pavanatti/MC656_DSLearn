@@ -11,12 +11,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class DSATopicsServiceTest {
+class DSATopicsServiceTest {
 
     @Mock
     private DataStructureMapper dataStructureMapper;
@@ -45,40 +47,40 @@ public class DSATopicsServiceTest {
 
     @Test
     void findDetailsByName_WhenNameIsArray_ShouldReturnArrayDataStructure() {
-        DSATopic dummyTopic = new DSATopic();
+        Optional<DSATopic> dummyTopic = Optional.of(new DSATopic());
         when(dsaRepository.findByName("Array")).thenReturn(dummyTopic);
-        when(dataStructureMapper.toDto(dummyTopic)).thenReturn(sampleArrayDTO);
+        when(dataStructureMapper.toDto(dummyTopic.get())).thenReturn(sampleArrayDTO);
 
         DSADetailDTO result = dataStructuresService.findDetailsByName("Array");
 
         assertNotNull(result);
         assertEquals("Array", result.getName());
         assertEquals("Um array é uma coleção de itens armazenados em locais de memória contíguos.", result.getContentMarkdown());
-        verify(dataStructureMapper, times(1)).toDto(dummyTopic);
+        verify(dataStructureMapper, times(1)).toDto(dummyTopic.get());
     }
 
     @Test
     void findDetailsByName_WhenNameIsStack_ShouldReturnStackDataStructure() {
-        DSATopic dummyTopic = new DSATopic();
+        Optional<DSATopic> dummyTopic = Optional.of(new DSATopic());
         when(dsaRepository.findByName("Stack")).thenReturn(dummyTopic);
-        when(dataStructureMapper.toDto(dummyTopic)).thenReturn(sampleStackDTO);
+        when(dataStructureMapper.toDto(dummyTopic.get())).thenReturn(sampleStackDTO);
 
         DSADetailDTO result = dataStructuresService.findDetailsByName("Stack");
 
         assertNotNull(result);
         assertEquals("Stack", result.getName());
         assertEquals("Uma pilha é uma estrutura de dados LIFO (Last-In, First-Out).", result.getContentMarkdown());
-        verify(dataStructureMapper, times(1)).toDto(dummyTopic);
+        verify(dataStructureMapper, times(1)).toDto(dummyTopic.get());
     }
 
     @Test
     void findDetailsByName_WhenNameIsUnknown_ShouldThrowNullPointerException() {
-        when(dsaRepository.findByName("UnknownStructure")).thenReturn(null);
+        when(dsaRepository.findByName("")).thenReturn(Optional.empty());
 
-        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
-            dataStructuresService.findDetailsByName("UnknownStructure");
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            dataStructuresService.findDetailsByName("");
         });
-        assertEquals("DSA Topic not found: UnknownStructure", exception.getMessage());
+        assertEquals("Tópico não encontrado", exception.getMessage());
         verify(dataStructureMapper, never()).toDto((DSATopic) any());
     }
 
@@ -92,12 +94,12 @@ public class DSATopicsServiceTest {
 
     @Test
     void findDetailsByName_WhenNameIsEmpty_ShouldThrowNullPointerException() {
-        when(dsaRepository.findByName("")).thenReturn(null);
+        when(dsaRepository.findByName("")).thenReturn(Optional.empty());
 
-        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             dataStructuresService.findDetailsByName("");
         });
-        assertEquals("DSA Topic not found: ", exception.getMessage());
+        assertEquals("Tópico não encontrado", exception.getMessage());
         verify(dataStructureMapper, never()).toDto((DSATopic) any());
     }
 }
