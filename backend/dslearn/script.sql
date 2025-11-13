@@ -1897,4 +1897,6 @@ Em geral, o pior caso é **exponencial**, tipicamente **O(b^d)**, onde:
 A complexidade de espaço é **O(d)**, correspondente à profundidade da pilha de recursão.
 ');
 
-\COPY exercise(title, difficulty, url, companies, related_topics) FROM 'backend\dslearn\src\main\resources\csv\leetcode.csv' WITH (FORMAT CSV, HEADER);
+COPY exercise(title, difficulty, url, companies, related_topics)
+FROM '/docker-entrypoint-initdb.d/leetcode.csv'
+WITH (FORMAT CSV, HEADER);
