@@ -61,10 +61,6 @@ class UserControllerTest {
                 .id(1L)
                 .name("Test User")
                 .email("test@example.com")
-                .startedTopics(Arrays.asList(1L, 2L))
-                .completedTopics(Arrays.asList(1L))
-                .startedExercises(Arrays.asList(1L, 2L, 3L))
-                .completedExercises(Arrays.asList(1L))
                 .build();
 
         when(userService.getUserInfoByToken(token)).thenReturn(userInfo);
@@ -75,12 +71,7 @@ class UserControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("Test User"))
-                .andExpect(jsonPath("$.email").value("test@example.com"))
-                .andExpect(jsonPath("$.startedTopics[0]").value(1))
-                .andExpect(jsonPath("$.startedTopics[1]").value(2))
-                .andExpect(jsonPath("$.completedTopics[0]").value(1))
-                .andExpect(jsonPath("$.startedExercises[0]").value(1))
-                .andExpect(jsonPath("$.completedExercises[0]").value(1));
+                .andExpect(jsonPath("$.email").value("test@example.com"));
 
         verify(userService, times(1)).getUserInfoByToken(token);
     }

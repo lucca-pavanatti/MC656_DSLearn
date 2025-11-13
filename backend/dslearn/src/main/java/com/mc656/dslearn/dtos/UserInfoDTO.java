@@ -11,8 +11,4 @@ public class UserInfoDTO {
     private Long id;
     private String name;
     private String email;
-    private List<Long> startedTopics;
-    private List<Long> completedTopics;
-    private List<Long> startedExercises;
-    private List<Long> completedExercises;
 }
