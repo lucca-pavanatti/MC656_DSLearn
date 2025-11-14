@@ -1,9 +1,3 @@
-CREATE TABLE dsa_topic (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) UNIQUE NOT NULL,
-    content_markdown TEXT NOT NULL
-);
-
 INSERT INTO dsa_topic (name, content_markdown) VALUES
 ('Array', '# Arrays
 
@@ -1902,14 +1896,3 @@ Em geral, o pior caso é **exponencial**, tipicamente **O(b^d)**, onde:
 
 A complexidade de espaço é **O(d)**, correspondente à profundidade da pilha de recursão.
 ');
-
-CREATE TABLE exercise (
-    id SERIAL PRIMARY KEY,
-    title VARCHAR(255),
-    url VARCHAR(512),
-    difficulty VARCHAR(50),
-    related_topics TEXT,
-    companies TEXT
-);
-
-\COPY exercise(title, difficulty, url, companies, related_topics) FROM 'backend\dslearn\src\main\resources\csv\leetcode.csv' WITH (FORMAT CSV, HEADER);

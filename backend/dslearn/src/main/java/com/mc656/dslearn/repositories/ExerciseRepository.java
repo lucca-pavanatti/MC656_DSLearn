@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ExerciseRepository extends PagingAndSortingRepository<Exercise, Long> {
@@ -21,4 +22,5 @@ public interface ExerciseRepository extends PagingAndSortingRepository<Exercise,
                                         @Param("dataStructure") String dataStructure,
                                         @Param("company") String company,
                                         Pageable pageable);
+    Optional<Exercise> findById(Long id);
 }
