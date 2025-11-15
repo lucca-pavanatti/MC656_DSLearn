@@ -202,19 +202,9 @@ class ExercisesServiceTest {
 
     @Test
     void findExercisesPaginated_shouldReturnEmptyPageForInvalidDifficulty() {
-        PagedResponseDTO<ExerciseDTO> result = exercisesService.findExercisesPaginated("InvalidDifficulty", null, null, 0, 10, "id", "asc");
-
-        assertNotNull(result);
-        assertTrue(result.getContent().isEmpty());
-        assertEquals(0, result.getTotalElements());
-        assertEquals(0, result.getPage());
-        assertEquals(10, result.getSize());
-        assertTrue(result.isFirst());
-        assertTrue(result.isLast());
-        
-        // Verify that repository was not called for invalid difficulty
-        verify(exerciseRepository, never()).findByFiltersPageable(any(), any(), any(), any());
-        verify(exerciseMapper, never()).toDtoList(any());
+        assertThrows(IllegalArgumentException.class, () -> {
+            exercisesService.findExercisesPaginated("InvalidDifficulty", null, null, 0, 10, "id", "asc");
+        });
     }
 
     @Test

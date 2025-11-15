@@ -6,6 +6,8 @@ import com.mc656.dslearn.mappers.ExerciseMapper;
 import com.mc656.dslearn.models.Exercise;
 import com.mc656.dslearn.models.enums.Difficulty;
 import com.mc656.dslearn.repositories.ExerciseRepository;
+import com.mc656.dslearn.validators.ExerciseFilterValidator;
+import com.mc656.dslearn.validators.PaginationValidator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,40 +37,30 @@ public class ExercisesService {
             String sortBy, 
             String sortDirection) {
         
-        Difficulty diffEnum = null;
-        if (difficulty != null && !difficulty.isEmpty()) {
-            try {
-                diffEnum = Difficulty.valueOf(difficulty);
-            } catch (IllegalArgumentException e) {
-                // Retorna página vazia para valores inválidos
-                return PagedResponseDTO.<ExerciseDTO>builder()
-                        .content(List.of())
-                        .page(page)
-                        .size(size)
-                        .totalElements(0)
-                        .totalPages(0)
-                        .first(true)
-                        .last(true)
-                        .build();
-            }
-        }
+        // Valida e normaliza os parâmetros usando classes de equivalência
+        Difficulty diffEnum = ExerciseFilterValidator.validateDifficulty(difficulty);
+        String validatedDataStructure = ExerciseFilterValidator.validateDataStructure(dataStructure);
+        String validatedCompany = ExerciseFilterValidator.validateCompany(company);
+        
+        // Valida parâmetros de paginação usando valores limite
+        int validatedPage = PaginationValidator.validatePage(page);
+        int validatedSize = PaginationValidator.validateSize(size);
+        String validatedSortDirection = PaginationValidator.validateSortDirection(sortDirection);
+        String[] allowedFields = {"id", "title", "difficulty"};
+        String validatedSortBy = PaginationValidator.validateSortBy(sortBy, allowedFields);
 
         Sort.Direction direction = Sort.Direction.ASC;
-        if ("desc".equalsIgnoreCase(sortDirection)) {
+        if ("desc".equalsIgnoreCase(validatedSortDirection)) {
             direction = Sort.Direction.DESC;
         }
 
-        if (sortBy == null || sortBy.isEmpty()) {
-            sortBy = "id";
-        }
-
-        Sort sort = Sort.by(direction, sortBy);
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Sort sort = Sort.by(direction, validatedSortBy);
+        Pageable pageable = PageRequest.of(validatedPage, validatedSize, sort);
 
         Page<Exercise> exercisePage = exerciseRepository.findByFiltersPageable(
                 diffEnum,
-                (dataStructure == null || dataStructure.isEmpty()) ? null : dataStructure,
-                (company == null || company.isEmpty()) ? null : company,
+                validatedDataStructure,
+                validatedCompany,
                 pageable
         );
 
