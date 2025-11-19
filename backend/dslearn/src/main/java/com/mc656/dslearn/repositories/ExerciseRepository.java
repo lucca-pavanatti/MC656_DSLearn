@@ -23,4 +23,7 @@ public interface ExerciseRepository extends PagingAndSortingRepository<Exercise,
                                         @Param("company") String company,
                                         Pageable pageable);
     Optional<Exercise> findById(Long id);
+
+    @Query("SELECT e FROM Exercise e")
+    List<Exercise> findAllExercises();
 }

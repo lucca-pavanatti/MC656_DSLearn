@@ -1,440 +1,826 @@
-openapi: 3.0.1
-info:
-  title: DS-Learn API
-  description: API documentation for DS-Learn - Data Structures and Algorithms Learning Platform
-  license:
-    name: Apache 2.0
-    url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.0.0
-servers:
-  - url: http://localhost:8080
-    description: Generated server url
-tags:
-  - name: DSA Topics
-    description: Data Structures and Algorithms topics management APIs
-  - name: Authentication
-    description: Authentication management APIs
-  - name: Exercises
-    description: Exercise management APIs
-  - name: User
-    description: User management and progress tracking APIs
-paths:
-  /user/{userId}/topics/status:
-    put:
-      tags:
-        - User
-      summary: Update topic status
-      description: Update the status of a topic for a user
-      operationId: updateTopicStatus
-      parameters:
-        - name: userId
-          in: path
-          description: User ID
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TopicStatusRequestDTO'
-        required: true
-      responses:
-        '200':
-          description: Topic status updated successfully
-          content:
-            '*/*':
-              schema:
-                type: object
-  /user/{userId}/exercises/status:
-    put:
-      tags:
-        - User
-      summary: Update exercise status
-      description: Update the status of an exercise for a user
-      operationId: updateExerciseStatus
-      parameters:
-        - name: userId
-          in: path
-          description: User ID
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ExerciseStatusRequestDTO'
-        required: true
-      responses:
-        '200':
-          description: Exercise status updated successfully
-          content:
-            '*/*':
-              schema:
-                type: object
-  /auth:
-    post:
-      tags:
-        - Authentication
-      summary: Authenticate user
-      description: Verify Google ID token and create/update user
-      operationId: auth
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AuthRequestDTO'
-        required: true
-      responses:
-        '201':
-          description: User authenticated successfully
-          content:
-            '*/*':
-              schema:
-                type: object
-        '400':
-          description: Token verification failed
-          content:
-            '*/*':
-              schema:
-                type: object
-  /user/{userId}/topics/progress:
-    get:
-      tags:
-        - User
-      summary: Get topics progress
-      description: Retrieve progress for all topics for a user
-      operationId: getTopicsProgress
-      parameters:
-        - name: userId
-          in: path
-          description: User ID
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: Topic progress retrieved successfully
-          content:
-            '*/*':
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TopicProgressDTO'
-  /user/{userId}/exercises/progress:
-    get:
-      tags:
-        - User
-      summary: Get exercises progress
-      description: Retrieve progress for all exercises for a user
-      operationId: getExercisesProgress
-      parameters:
-        - name: userId
-          in: path
-          description: User ID
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: Exercise progress retrieved successfully
-          content:
-            '*/*':
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ExerciseProgressDTO'
-  /user/info:
-    get:
-      tags:
-        - User
-      summary: Get user information
-      description: Retrieve user information by Google ID token
-      operationId: getUserInfo
-      parameters:
-        - name: Token
-          in: header
-          description: Google ID token
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: User information retrieved successfully
-          content:
-            '*/*':
-              schema:
-                type: object
-        '400':
-          description: Token verification failed
-          content:
-            '*/*':
-              schema:
-                type: object
-        '401':
-          description: Invalid token
-          content:
-            '*/*':
-              schema:
-                type: object
-      security:
-        - token-header: []
-  /api/topics:
-    get:
-      tags:
-        - DSA Topics
-      summary: Get all topics paginated
-      description: Retrieve all DSA topics with pagination
-      operationId: getAllTopicsPaginated
-      parameters:
-        - name: page
-          in: query
-          description: Page number (0-based)
-          required: false
-          schema:
-            type: integer
-            format: int32
-            default: 0
-        - name: size
-          in: query
-          description: Page size
-          required: false
-          schema:
-            type: integer
-            format: int32
-            default: 10
-        - name: sortBy
-          in: query
-          description: Sort by field
-          required: false
-          schema:
-            type: string
-            default: id
-        - name: sortDirection
-          in: query
-          description: Sort direction (asc/desc)
-          required: false
-          schema:
-            type: string
-            default: asc
-      responses:
-        '200':
-          description: Topics retrieved successfully
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/PagedResponseDTODSADetailDTO'
-  /api/topics/{name}:
-    get:
-      tags:
-        - DSA Topics
-      summary: Get topic by name
-      description: Retrieve detailed information about a specific DSA topic
-      operationId: getTopicByName
-      parameters:
-        - name: name
-          in: path
-          description: Topic name
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Topic found
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/DSADetailDTO'
-        '404':
-          description: Topic not found
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/DSADetailDTO'
-  /api/exercises:
-    get:
-      tags:
-        - Exercises
-      summary: Get exercises paginated
-      description: Retrieve exercises with pagination and optional filters
-      operationId: getExercisesPaginated
-      parameters:
-        - name: difficulty
-          in: query
-          description: Filter by difficulty level
-          required: false
-          schema:
-            type: string
-        - name: dataStructure
-          in: query
-          description: Filter by data structure
-          required: false
-          schema:
-            type: string
-        - name: company
-          in: query
-          description: Filter by company
-          required: false
-          schema:
-            type: string
-        - name: page
-          in: query
-          description: Page number (0-based)
-          required: false
-          schema:
-            type: integer
-            format: int32
-            default: 0
-        - name: size
-          in: query
-          description: Page size
-          required: false
-          schema:
-            type: integer
-            format: int32
-            default: 10
-        - name: sortBy
-          in: query
-          description: Sort by field
-          required: false
-          schema:
-            type: string
-            default: id
-        - name: sortDirection
-          in: query
-          description: Sort direction (asc/desc)
-          required: false
-          schema:
-            type: string
-            default: asc
-      responses:
-        '200':
-          description: Exercises retrieved successfully
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/PagedResponseDTOExerciseDTO'
-components:
-  schemas:
-    TopicStatusRequestDTO:
-      type: object
-      properties:
-        status:
-          type: string
-        topic_name:
-          type: string
-    ExerciseStatusRequestDTO:
-      type: object
-      properties:
-        status:
-          type: string
-        exercise_id:
-          type: integer
-          format: int64
-    AuthRequestDTO:
-      type: object
-      properties:
-        idToken:
-          type: string
-    TopicProgressDTO:
-      type: object
-      properties:
-        name:
-          type: string
-        status:
-          type: string
-    ExerciseProgressDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        title:
-          type: string
-        status:
-          type: string
-    DSADetailDTO:
-      type: object
-      properties:
-        name:
-          type: string
-        contentMarkdown:
-          type: string
-    PagedResponseDTODSADetailDTO:
-      type: object
-      properties:
-        content:
-          type: array
-          items:
-            $ref: '#/components/schemas/DSADetailDTO'
-        page:
-          type: integer
-          format: int32
-        size:
-          type: integer
-          format: int32
-        totalElements:
-          type: integer
-          format: int64
-        totalPages:
-          type: integer
-          format: int32
-        first:
-          type: boolean
-        last:
-          type: boolean
-    ExerciseDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        title:
-          type: string
-        url:
-          type: string
-        difficulty:
-          type: string
-        relatedTopics:
-          type: string
-        companies:
-          type: string
-    PagedResponseDTOExerciseDTO:
-      type: object
-      properties:
-        content:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExerciseDTO'
-        page:
-          type: integer
-          format: int32
-        size:
-          type: integer
-          format: int32
-        totalElements:
-          type: integer
-          format: int64
-        totalPages:
-          type: integer
-          format: int32
-        first:
-          type: boolean
-        last:
-          type: boolean
-  securitySchemes:
-    bearer-token:
-      type: http
-      description: Enter your Google ID token
-      scheme: bearer
-      bearerFormat: JWT
-    token-header:
-      type: apiKey
-      description: Google ID token in header
-      name: Token
-      in: header
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "DS-Learn API",
+    "description": "API documentation for DS-Learn - Data Structures and Algorithms Learning Platform",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "DSA Topics",
+      "description": "Data Structures and Algorithms topics management APIs"
+    },
+    {
+      "name": "Authentication",
+      "description": "Authentication management APIs"
+    },
+    {
+      "name": "Exercises",
+      "description": "Exercise management APIs"
+    },
+    {
+      "name": "User",
+      "description": "User management and progress tracking APIs"
+    }
+  ],
+  "paths": {
+    "/users/{userId}/topics/status": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Update topic status",
+        "description": "Update the status of a topic for a user",
+        "operationId": "updateTopicStatus",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TopicStatusRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Topic status updated successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}/exercises/status": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Update exercise status",
+        "description": "Update the status of an exercise for a user",
+        "operationId": "updateExerciseStatus",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExerciseStatusRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Exercise status updated successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Authenticate user",
+        "description": "Verify Google ID token and create/update user",
+        "operationId": "auth",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Token verification failed",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "User authenticated successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}/topics/progress": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get topics progress",
+        "description": "Retrieve progress for all topics for a user",
+        "operationId": "getTopicsProgress",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Topic progress retrieved successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TopicProgressDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}/exercises/progress": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get exercises progress",
+        "description": "Retrieve progress for all exercises for a user",
+        "operationId": "getExercisesProgress",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Exercise progress retrieved successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExerciseProgressDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}/metrics": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get user metrics",
+        "description": "Retrieve various metrics for a user",
+        "operationId": "getUserMetrics",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User metrics retrieved successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserMetricsDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/info": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get user information",
+        "description": "Retrieve user information by Google ID token",
+        "operationId": "getUserInfo",
+        "parameters": [
+          {
+            "name": "Token",
+            "in": "header",
+            "description": "Google ID token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User information retrieved successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Token verification failed",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "token-header": []
+          }
+        ]
+      }
+    },
+    "/api/topics": {
+      "get": {
+        "tags": [
+          "DSA Topics"
+        ],
+        "summary": "Get all topics paginated",
+        "description": "Retrieve all DSA topics with pagination",
+        "operationId": "getAllTopicsPaginated",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (0-based)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Page size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Sort by field",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id"
+            }
+          },
+          {
+            "name": "sortDirection",
+            "in": "query",
+            "description": "Sort direction (asc/desc)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "asc"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Topics retrieved successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResponseDTODSADetailDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/topics/{name}": {
+      "get": {
+        "tags": [
+          "DSA Topics"
+        ],
+        "summary": "Get topic by name",
+        "description": "Retrieve detailed information about a specific DSA topic",
+        "operationId": "getTopicByName",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Topic name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Topic found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DSADetailDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Topic not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DSADetailDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/exercises": {
+      "get": {
+        "tags": [
+          "Exercises"
+        ],
+        "summary": "Get exercises paginated",
+        "description": "Retrieve exercises with pagination and optional filters",
+        "operationId": "getExercisesPaginated",
+        "parameters": [
+          {
+            "name": "difficulty",
+            "in": "query",
+            "description": "Filter by difficulty level",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dataStructure",
+            "in": "query",
+            "description": "Filter by data structure",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "company",
+            "in": "query",
+            "description": "Filter by company",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (0-based)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Page size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Sort by field",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id"
+            }
+          },
+          {
+            "name": "sortDirection",
+            "in": "query",
+            "description": "Sort direction (asc/desc)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "asc"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Exercises retrieved successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResponseDTOExerciseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TopicStatusRequestDTO": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "topic_name": {
+            "type": "string"
+          }
+        }
+      },
+      "ExerciseStatusRequestDTO": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "exercise_id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "AuthRequestDTO": {
+        "type": "object",
+        "properties": {
+          "idToken": {
+            "type": "string"
+          }
+        }
+      },
+      "TopicProgressDTO": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "ExerciseProgressDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "ExercisesByDifficultyMetrics": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "completed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "inProgress": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "notStarted": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "completionPercentage": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "ExercisesByTopicMetrics": {
+        "type": "object",
+        "properties": {
+          "topicName": {
+            "type": "string"
+          },
+          "totalExercises": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "completedExercises": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "inProgressExercises": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "notStartedExercises": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "completionPercentage": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "UserMetricsDTO": {
+        "type": "object",
+        "properties": {
+          "totalTopics": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "completedTopics": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "inProgressTopics": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "notStartedTopics": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "topicsCompletionPercentage": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalExercises": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "completedExercises": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "inProgressExercises": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "notStartedExercises": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "exercisesCompletionPercentage": {
+            "type": "number",
+            "format": "double"
+          },
+          "exercisesByDifficulty": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ExercisesByDifficultyMetrics"
+            }
+          },
+          "exercisesByTopic": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExercisesByTopicMetrics"
+            }
+          },
+          "overallProgress": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "DSADetailDTO": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "contentMarkdown": {
+            "type": "string"
+          }
+        }
+      },
+      "PagedResponseDTODSADetailDTO": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DSADetailDTO"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ExerciseDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "difficulty": {
+            "type": "string"
+          },
+          "relatedTopics": {
+            "type": "string"
+          },
+          "companies": {
+            "type": "string"
+          }
+        }
+      },
+      "PagedResponseDTOExerciseDTO": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExerciseDTO"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearer-token": {
+        "type": "http",
+        "description": "Enter your Google ID token",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "token-header": {
+        "type": "apiKey",
+        "description": "Google ID token in header",
+        "name": "Token",
+        "in": "header"
+      }
+    }
+  }
+}
