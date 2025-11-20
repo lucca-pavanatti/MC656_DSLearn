@@ -5,6 +5,7 @@ import com.mc656.dslearn.dtos.ExerciseStatusRequestDTO;
 import com.mc656.dslearn.dtos.TopicProgressDTO;
 import com.mc656.dslearn.dtos.TopicStatusRequestDTO;
 import com.mc656.dslearn.dtos.UserInfoDTO;
+import com.mc656.dslearn.dtos.UserMetricsDTO;
 import com.mc656.dslearn.services.UserExerciseService;
 import com.mc656.dslearn.services.UserService;
 import com.mc656.dslearn.services.UserTopicService;
@@ -22,7 +23,7 @@ import java.security.GeneralSecurityException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 @Tag(name = "User", description = "User management and progress tracking APIs")
 public class UserController {
 
@@ -110,6 +111,19 @@ public class UserController {
 
         var progresso = userTopicService.getTopicsProgress(userId);
         return ResponseEntity.ok(progresso);
+    }
+
+    @Operation(summary = "Get user metrics", description = "Retrieve various metrics for a user")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User metrics retrieved successfully")
+    })
+    @GetMapping("/{id}/metrics")
+    public ResponseEntity<UserMetricsDTO> getUserMetrics(
+            @Parameter(description = "User ID", required = true)
+            @PathVariable("id") Long userId
+    ) {
+        UserMetricsDTO metrics = userService.getUserMetrics(userId);
+        return ResponseEntity.ok(metrics);
     }
 
 }

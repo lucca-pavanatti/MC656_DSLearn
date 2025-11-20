@@ -6,6 +6,7 @@ import com.mc656.dslearn.dtos.ExerciseStatusRequestDTO;
 import com.mc656.dslearn.dtos.TopicProgressDTO;
 import com.mc656.dslearn.dtos.TopicStatusRequestDTO;
 import com.mc656.dslearn.dtos.UserInfoDTO;
+import com.mc656.dslearn.dtos.UserMetricsDTO;
 import com.mc656.dslearn.services.UserExerciseService;
 import com.mc656.dslearn.services.UserService;
 import com.mc656.dslearn.services.UserTopicService;
@@ -18,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import java.util.Map;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -65,7 +67,7 @@ class UserControllerTest {
 
         when(userService.getUserInfoByToken(token)).thenReturn(userInfo);
 
-        mockMvc.perform(get("/user/info")
+        mockMvc.perform(get("/users/info")
                         .header("Token", token))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -82,7 +84,7 @@ class UserControllerTest {
 
         when(userService.getUserInfoByToken(token)).thenReturn(null);
 
-        mockMvc.perform(get("/user/info")
+        mockMvc.perform(get("/users/info")
                         .header("Token", token))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().string("Invalid token"));
@@ -97,7 +99,7 @@ class UserControllerTest {
         when(userService.getUserInfoByToken(token))
                 .thenThrow(new GeneralSecurityException("Token verification failed"));
 
-        mockMvc.perform(get("/user/info")
+        mockMvc.perform(get("/users/info")
                         .header("Token", token))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Token verification failed")));
@@ -112,7 +114,7 @@ class UserControllerTest {
         when(userService.getUserInfoByToken(token))
                 .thenThrow(new IOException("Network error"));
 
-        mockMvc.perform(get("/user/info")
+        mockMvc.perform(get("/users/info")
                         .header("Token", token))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Token verification failed")));
@@ -129,7 +131,7 @@ class UserControllerTest {
 
         doNothing().when(userExerciseService).updateStatus(userId, 1L, "completed");
 
-        mockMvc.perform(put("/user/{userId}/exercises/status", userId)
+        mockMvc.perform(put("/users/{userId}/exercises/status", userId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
@@ -146,7 +148,7 @@ class UserControllerTest {
 
         doNothing().when(userTopicService).updateStatus(userId, "arrays", "started");
 
-        mockMvc.perform(put("/user/{userId}/topics/status", userId)
+        mockMvc.perform(put("/users/{userId}/topics/status", userId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
@@ -172,7 +174,7 @@ class UserControllerTest {
 
         when(userExerciseService.getExercisesProgress(userId)).thenReturn(progress);
 
-        mockMvc.perform(get("/user/{userId}/exercises/progress", userId))
+        mockMvc.perform(get("/users/{userId}/exercises/progress", userId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].id").value(1))
@@ -201,7 +203,7 @@ class UserControllerTest {
 
         when(userTopicService.getTopicsProgress(userId)).thenReturn(progress);
 
-        mockMvc.perform(get("/user/{userId}/topics/progress", userId))
+        mockMvc.perform(get("/users/{userId}/topics/progress", userId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].name").value("arrays"))
@@ -218,7 +220,7 @@ class UserControllerTest {
 
         when(userExerciseService.getExercisesProgress(userId)).thenReturn(Arrays.asList());
 
-        mockMvc.perform(get("/user/{userId}/exercises/progress", userId))
+        mockMvc.perform(get("/users/{userId}/exercises/progress", userId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isEmpty());
@@ -232,11 +234,64 @@ class UserControllerTest {
 
         when(userTopicService.getTopicsProgress(userId)).thenReturn(Arrays.asList());
 
-        mockMvc.perform(get("/user/{userId}/topics/progress", userId))
+        mockMvc.perform(get("/users/{userId}/topics/progress", userId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isEmpty());
 
         verify(userTopicService, times(1)).getTopicsProgress(userId);
+    }
+
+    @Test
+    void getUserMetrics_WithValidUserId_ShouldReturnMetrics() throws Exception {
+        Long userId = 1L;
+
+        UserMetricsDTO.ExercisesByDifficultyMetrics diffMetrics = UserMetricsDTO.ExercisesByDifficultyMetrics.builder()
+                .total(1)
+                .completed(1)
+                .inProgress(0)
+                .notStarted(0)
+                .completionPercentage(100.0)
+                .build();
+
+        UserMetricsDTO.ExercisesByTopicMetrics topicMetrics = UserMetricsDTO.ExercisesByTopicMetrics.builder()
+                .topicName("arrays")
+                .totalExercises(1)
+                .completedExercises(1)
+                .inProgressExercises(0)
+                .notStartedExercises(0)
+                .completionPercentage(100.0)
+                .build();
+
+        UserMetricsDTO metrics = UserMetricsDTO.builder()
+                .totalTopics(1)
+                .completedTopics(1)
+                .inProgressTopics(0)
+                .notStartedTopics(0)
+                .topicsCompletionPercentage(100.0)
+                .totalExercises(1)
+                .completedExercises(1)
+                .inProgressExercises(0)
+                .notStartedExercises(0)
+                .exercisesCompletionPercentage(100.0)
+                .exercisesByDifficulty(Map.of("Easy", diffMetrics))
+                .exercisesByTopic(Arrays.asList(topicMetrics))
+                .overallProgress(100.0)
+                .build();
+
+        when(userService.getUserMetrics(userId)).thenReturn(metrics);
+
+        mockMvc.perform(get("/users/{id}/metrics", userId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.totalTopics").value(1))
+                .andExpect(jsonPath("$.completedTopics").value(1))
+                .andExpect(jsonPath("$.totalExercises").value(1))
+                .andExpect(jsonPath("$.completedExercises").value(1))
+                .andExpect(jsonPath("$.overallProgress").value(100.0))
+                .andExpect(jsonPath("$.exercisesByDifficulty.Easy.total").value(1))
+                .andExpect(jsonPath("$.exercisesByTopic[0].topicName").value("arrays"));
+
+        verify(userService, times(1)).getUserMetrics(userId);
     }
 }

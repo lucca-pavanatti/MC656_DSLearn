@@ -1622,7 +1622,7 @@ print(busca_binaria(dados, 7))  # Saída: 3
 - **Pior caso:** O(log n).
 - **Complexidade espacial:** O(1) na versão iterativa e O(log n) na versão recursiva (por conta da pilha de chamadas).
 '),
-('Depth-First Search', '# Busca em Profundidade (DFS)
+('Depth-first Search', '# Busca em Profundidade (DFS)
 
 A **Busca em Profundidade (Depth-First Search - DFS)** é um algoritmo fundamental usado para percorrer ou buscar elementos em **grafos** e **árvores**. Ele segue uma estratégia de ir o mais fundo possível em um ramo antes de retroceder, explorando assim caminhos completos antes de explorar outros.
 
@@ -1711,7 +1711,7 @@ A B D E F C
 - **Espaço:** O(V), devido à pilha de chamadas recursivas ou estrutura auxiliar.
 
 '),
-('Breadth-First Search', '# Busca em Largura (BFS)
+('Breadth-first Search', '# Busca em Largura (BFS)
 
 A **Busca em Largura** (Breadth-First Search - BFS) é um algoritmo de
 **traversal** (percurso) usado para explorar todos os vértices de um
