@@ -25,16 +25,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 /**
- * Testes para UserExerciseService
- *
- * Tabela de Decisão para updateStatus():
+ * Tabela de Decisão para UserExerciseService():
  * 
- * Condições (Causas):
+ * Causas:
  * C1: Usuário existe?
  * C2: Exercício existe?
  * C3: UserExercise já existe?
  * 
- * Ações (Efeitos):
+ * Efeitos:
  * E1: Lançar exceção "Usuário não encontrado"
  * E2: Lançar exceção "Exercício não encontrado"
  * E3: Criar novo UserExercise
