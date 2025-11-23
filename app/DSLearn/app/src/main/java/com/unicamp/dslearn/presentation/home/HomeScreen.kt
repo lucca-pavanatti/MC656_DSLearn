@@ -36,8 +36,8 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.unicamp.dslearn.R
-import com.unicamp.dslearn.core.model.CardModel
-import com.unicamp.dslearn.presentation.composables.Card
+import com.unicamp.dslearn.core.model.TopicModel
+import com.unicamp.dslearn.presentation.composables.Topic
 import com.unicamp.dslearn.ui.theme.DSLearnTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -51,12 +51,12 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel(), onCardClick: (Int, St
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = { HomeTopBar(scrollBehavior) }
     ) { paddingValues ->
-        val cardPagingItems: LazyPagingItems<CardModel> =
-            viewModel.cardListState.collectAsLazyPagingItems()
+        val topicPagingItems: LazyPagingItems<TopicModel> =
+            viewModel.topicListState.collectAsLazyPagingItems()
 
         HomeScreen(
             Modifier.padding(paddingValues),
-            cardPagingItems,
+            topicPagingItems,
             viewModel.searchQueryState,
             onCardClick
         )
@@ -67,7 +67,7 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel(), onCardClick: (Int, St
 @Composable
 private fun HomeScreen(
     modifier: Modifier = Modifier,
-    cardPagingItems: LazyPagingItems<CardModel>,
+    topicPagingItems: LazyPagingItems<TopicModel>,
     searchQuery: TextFieldState,
     onCardClick: (Int, String) -> Unit
 ) {
@@ -92,7 +92,7 @@ private fun HomeScreen(
                         )
                     },
                     trailingIcon = {
-                        val isLoadingCards = cardPagingItems.loadState.refresh is LoadState.Loading
+                        val isLoadingCards = topicPagingItems.loadState.refresh is LoadState.Loading
                         SearchBarTrailingIcon(isLoadingCards = isLoadingCards) {
                             searchQuery.clearText()
                         }
@@ -111,14 +111,13 @@ private fun HomeScreen(
         )
 
         LazyColumn(modifier = Modifier.padding(top = 24.dp)) {
-            items(cardPagingItems.itemCount) { index ->
-                cardPagingItems[index]?.let { cardModel ->
-                    Card(
-                        name = cardModel.name,
-                        theory = cardModel.theory,
-                        exercises = cardModel.exercises
+            items(topicPagingItems.itemCount) { index ->
+                topicPagingItems[index]?.let { topicModel ->
+                    Topic(
+                        name = topicModel.name,
+                        content = topicModel.content
                     ) {
-                        onCardClick(cardModel.id, cardModel.name)
+                        onCardClick(index, topicModel.name)
                     }
                 }
             }

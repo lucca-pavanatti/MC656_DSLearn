@@ -2,11 +2,11 @@ package com.unicamp.dslearn.data.repository
 
 
 import androidx.paging.testing.asSnapshot
-import com.unicamp.dslearn.core.model.CardModel
+import com.unicamp.dslearn.core.model.TopicModel
 import com.unicamp.dslearn.core.model.Difficult
 import com.unicamp.dslearn.core.model.ExercisesModel
-import com.unicamp.dslearn.data.datasource.remote.SearchPagingSource.Companion.SEARCH_PAGE_SIZE
-import com.unicamp.dslearn.data.datasource.remote.api.SearchApi
+import com.unicamp.dslearn.data.datasource.remote.TopicsPagingSource.Companion.TOPICS_PAGE_SIZE
+import com.unicamp.dslearn.data.datasource.remote.api.TopicsApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
@@ -34,7 +34,7 @@ class SearchRepositoryTest {
 
     private val mockWebServer: MockWebServer by lazy { MockWebServer() }
 
-    private lateinit var repository: SearchRepository
+    private lateinit var repository: TopicsRepository
 
     @Before
     fun setup() {
@@ -52,9 +52,9 @@ class SearchRepositoryTest {
                     .eventListenerFactory { EventListener.NONE }
                     .build())
             .build()
-            .create(SearchApi::class.java)
+            .create(TopicsApi::class.java)
 
-        repository = SearchRepositoryImpl(searchApi)
+        repository = TopicsRepositoryImpl(searchApi)
     }
 
     @After
@@ -76,8 +76,8 @@ class SearchRepositoryTest {
             }
         }
 
-        val expectedCardModel =
-            CardModel(
+        val expectedTopicModel =
+            TopicModel(
                 id = 1,
                 name = "Array 0",
                 theory = "Um array é uma coleção de itens armazenados em locais de memória contíguos.",
@@ -95,11 +95,11 @@ class SearchRepositoryTest {
                 )
             )
 
-        val searchByQueryResultList = repository.searchByQuery("").asSnapshot {
-            scrollTo(SEARCH_PAGE_SIZE * 2)
+        val searchByQueryResultList = repository.getTopics("").asSnapshot {
+            scrollTo(TOPICS_PAGE_SIZE * 2)
         }
 
         assertEquals(8, searchByQueryResultList.size)
-        assertEquals(expectedCardModel, searchByQueryResultList[0])
+        assertEquals(expectedTopicModel, searchByQueryResultList[0])
     }
 }

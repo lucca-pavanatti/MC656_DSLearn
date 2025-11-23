@@ -8,7 +8,7 @@ import androidx.compose.ui.test.performClick
 import androidx.paging.PagingData
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.unicamp.dslearn.MainDispatcherRule
-import com.unicamp.dslearn.core.model.CardModel
+import com.unicamp.dslearn.core.model.TopicModel
 import com.unicamp.dslearn.ui.theme.DSLearnTheme
 import io.mockk.every
 import io.mockk.mockk
@@ -34,14 +34,14 @@ class HomeScreenTest {
 
     @Test
     fun `when card is displayed, assert on card click calls callback function`() = runTest {
-        val expectedCardModels = listOf(
-            CardModel(
+        val expectedTopicModels = listOf(
+            TopicModel(
                 id = 1,
                 name = "Array 0",
                 theory = "Um array é uma coleção de itens armazenados em locais de memória contíguos.",
                 exercises = listOf()
             ),
-            CardModel(
+            TopicModel(
                 id = 2,
                 name = "Array 2",
                 theory = "Um array é uma coleção de itens armazenados em locais de memória contíguos.",
@@ -49,15 +49,15 @@ class HomeScreenTest {
             ),
         )
 
-        val pagingDataFlow = MutableStateFlow(PagingData.Companion.from(expectedCardModels))
+        val pagingDataFlow = MutableStateFlow(PagingData.Companion.from(expectedTopicModels))
         every { viewModel.cardListState } returns pagingDataFlow
         every { viewModel.searchQueryState } returns TextFieldState("")
 
         composeTestRule.setContent {
             DSLearnTheme {
                 HomeScreen(viewModel, onCardClick = { cardId, cardName ->
-                    assertEquals(expectedCardModels[0].id, cardId)
-                    assertEquals(expectedCardModels[0].name, cardName)
+                    assertEquals(expectedTopicModels[0].id, cardId)
+                    assertEquals(expectedTopicModels[0].name, cardName)
                 })
             }
         }

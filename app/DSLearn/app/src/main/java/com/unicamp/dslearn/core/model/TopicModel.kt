@@ -1,10 +1,8 @@
 package com.unicamp.dslearn.core.model
 
-data class CardModel(
-    val id: Int,
+data class TopicModel(
     val name: String,
-    val theory: String,
-    val exercises: List<ExercisesModel>
+    val content: String
 )
 
 data class ExercisesModel(

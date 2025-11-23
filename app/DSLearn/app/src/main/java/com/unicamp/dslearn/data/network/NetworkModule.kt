@@ -1,7 +1,6 @@
 package com.unicamp.dslearn.data.network
 
-import com.unicamp.dslearn.data.datasource.remote.api.SearchApi
-import com.unicamp.dslearn.data.network.fake.FakeResponseInterceptor
+import com.unicamp.dslearn.data.datasource.remote.api.TopicsApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -21,7 +20,6 @@ private object NetworkModule {
         return OkHttpClient
             .Builder()
             .addInterceptor(httpLoggingInterceptor)
-            .addInterceptor(FakeResponseInterceptor())
             .readTimeout(60, TimeUnit.SECONDS)
             .connectTimeout(60, TimeUnit.SECONDS)
             .build()
@@ -42,10 +40,10 @@ private object NetworkModule {
             .build()
     }
 
-    fun provideService(retrofit: Retrofit): SearchApi =
-        retrofit.create(SearchApi::class.java)
+    fun provideService(retrofit: Retrofit): TopicsApi =
+        retrofit.create(TopicsApi::class.java)
 
-    private const val BASE_URL = "https://example.com/"
+    private const val BASE_URL = "http://10.0.2.2:8080"
 }
 
 val networkModule = module {

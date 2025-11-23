@@ -1,17 +1,11 @@
 package com.unicamp.dslearn.data.datasource.remote
 
-import android.net.Uri
-import android.util.Log
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import androidx.paging.testing.TestPager
-import com.unicamp.dslearn.data.datasource.remote.SearchPagingSource
-import com.unicamp.dslearn.data.datasource.remote.api.SearchApi
+import com.unicamp.dslearn.data.datasource.remote.api.TopicsApi
 import com.unicamp.dslearn.data.datasource.remote.dto.ExercisesResponseDTO
-import com.unicamp.dslearn.data.datasource.remote.dto.SearchCardResponseDTO
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.mockkStatic
+import com.unicamp.dslearn.data.datasource.remote.dto.TopicItemResponseDTO
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -34,7 +28,7 @@ class SearchPagingSourceTest {
 
     private val mockWebServer: MockWebServer by lazy { MockWebServer() }
 
-    private lateinit var testPager: TestPager<Int, SearchCardResponseDTO>
+    private lateinit var testPager: TestPager<Int, TopicItemResponseDTO>
 
     @Before
     fun setup() {
@@ -49,15 +43,15 @@ class SearchPagingSourceTest {
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .client(OkHttpClient())
             .build()
-            .create(SearchApi::class.java)
+            .create(TopicsApi::class.java)
 
-        val pagingSource = SearchPagingSource(
+        val pagingSource = TopicsPagingSource(
             searchApi, ""
         )
 
         testPager = TestPager(
             config = PagingConfig(
-                pageSize = SearchPagingSource.SEARCH_PAGE_SIZE,
+                pageSize = TopicsPagingSource.TOPICS_PAGE_SIZE,
                 enablePlaceholders = false
             ),
             pagingSource = pagingSource
@@ -78,7 +72,7 @@ class SearchPagingSourceTest {
 
         mockWebServer.enqueue(response)
 
-        val expectedSearchResponseDTO = SearchCardResponseDTO(
+        val expectedSearchResponseDTO = TopicItemResponseDTO(
             id = 1,
             name = "Array 0",
             theory = "Um array é uma coleção de itens armazenados em locais de memória contíguos.",
@@ -123,7 +117,7 @@ class SearchPagingSourceTest {
             .setBody(jsonSecondPageSuccessResponse)
         mockWebServer.enqueue(secondPageResponse)
 
-        val expectedSearchResponseDTO = SearchCardResponseDTO(
+        val expectedSearchResponseDTO = TopicItemResponseDTO(
             id = 2,
             name = "Array 2 6",
             theory = "Um array é uma coleção de itens armazenados em locais de memória contíguos.",
