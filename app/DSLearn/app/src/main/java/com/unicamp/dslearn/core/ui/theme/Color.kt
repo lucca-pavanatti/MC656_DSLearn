@@ -1,4 +1,4 @@
-package com.unicamp.dslearn.ui.theme
+package com.unicamp.dslearn.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

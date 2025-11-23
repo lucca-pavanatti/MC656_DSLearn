@@ -1,4 +1,4 @@
-package com.unicamp.dslearn.presentation.home
+package com.unicamp.dslearn.presentation.screens.exercises
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.snapshotFlow
@@ -19,14 +19,14 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class HomeViewModel(
+class ExercisesViewModel(
     getTopicsUseCase: GetTopicsUseCase
 ) : ViewModel() {
 
     val searchQueryState = TextFieldState()
 
     @OptIn(FlowPreview::class)
-    val topicListState: StateFlow<PagingData<TopicModel>> =
+    val exerciseListState: StateFlow<PagingData<TopicModel>> =
         snapshotFlow { searchQueryState.text }
             .debounce(500)
             .flatMapLatest { query ->
@@ -40,7 +40,7 @@ class HomeViewModel(
             ).stateIn(
                 viewModelScope,
                 SharingStarted.Lazily,
-                PagingData.empty()
+                PagingData.Companion.empty()
             )
 
 }

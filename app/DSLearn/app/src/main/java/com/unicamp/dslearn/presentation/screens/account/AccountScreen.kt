@@ -1,4 +1,4 @@
-package com.unicamp.dslearn.presentation.carddetail
+package com.unicamp.dslearn.presentation.screens.account
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,22 +17,25 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CardDetailScreen(cardId: Int, cardName: String) {
+fun AccountScreen() {
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = { CardDetailTopBar(scrollBehavior, cardName) }
+        topBar = { AccountTopBar(scrollBehavior) }
     ) { paddingValues ->
-
-        CardDetailsScreen(Modifier.padding(paddingValues))
+        AccountScreen(Modifier.padding(paddingValues))
     }
+}
+
+@Composable
+private fun AccountScreen(modifier: Modifier = Modifier) {
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CardDetailTopBar(scrollBehavior: TopAppBarScrollBehavior, text: String) {
+private fun AccountTopBar(scrollBehavior: TopAppBarScrollBehavior) {
     MediumTopAppBar(
         modifier = Modifier.padding(start = 24.dp),
         colors = TopAppBarDefaults.topAppBarColors(
@@ -42,7 +45,7 @@ private fun CardDetailTopBar(scrollBehavior: TopAppBarScrollBehavior, text: Stri
         ),
         title = {
             Text(
-                text = text,
+                text = "Account",
                 style = MaterialTheme.typography.headlineLarge
             )
         },
@@ -50,6 +53,3 @@ private fun CardDetailTopBar(scrollBehavior: TopAppBarScrollBehavior, text: Stri
     )
 }
 
-@Composable
-private fun CardDetailsScreen(modifier: Modifier = Modifier) {
-}

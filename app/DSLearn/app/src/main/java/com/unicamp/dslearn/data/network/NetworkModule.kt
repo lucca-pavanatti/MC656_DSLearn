@@ -1,5 +1,6 @@
 package com.unicamp.dslearn.data.network
 
+import com.unicamp.dslearn.data.datasource.remote.api.ExercisesApi
 import com.unicamp.dslearn.data.datasource.remote.api.TopicsApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -40,8 +41,11 @@ private object NetworkModule {
             .build()
     }
 
-    fun provideService(retrofit: Retrofit): TopicsApi =
+    fun provideTopicsApiService(retrofit: Retrofit): TopicsApi =
         retrofit.create(TopicsApi::class.java)
+
+    fun provideExercisesApiService(retrofit: Retrofit): ExercisesApi =
+        retrofit.create(ExercisesApi::class.java)
 
     private const val BASE_URL = "http://10.0.2.2:8080"
 }
@@ -50,5 +54,6 @@ val networkModule = module {
     single { NetworkModule.provideHttpLoggingInterceptor() }
     single { NetworkModule.provideHttpClient(get()) }
     single { NetworkModule.provideRetrofit(get()) }
-    single { NetworkModule.provideService(get()) }
+    single { NetworkModule.provideTopicsApiService(get()) }
+    single { NetworkModule.provideExercisesApiService(get()) }
 }

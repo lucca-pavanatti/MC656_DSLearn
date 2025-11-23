@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.unicamp.dslearn.ui.theme.DSLearnTheme
+import com.unicamp.dslearn.core.ui.theme.DSLearnTheme
 
 @Composable
 fun Topic(
@@ -30,12 +30,6 @@ fun Topic(
             text = name,
             style = MaterialTheme.typography.bodyLarge
         )
-//        Text(
-//            maxLines = 5,
-//            modifier = Modifier.padding(top = 4.dp),
-//            text = content,
-//            style = MaterialTheme.typography.labelMedium
-//        )
     }
 }
 

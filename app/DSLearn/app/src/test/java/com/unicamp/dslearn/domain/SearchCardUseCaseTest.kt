@@ -3,7 +3,7 @@ package com.unicamp.dslearn.domain
 import androidx.paging.PagingData
 import androidx.paging.testing.asSnapshot
 import com.unicamp.dslearn.core.model.TopicModel
-import com.unicamp.dslearn.data.repository.TopicsRepository
+import com.unicamp.dslearn.data.repository.topics.TopicsRepository
 import com.unicamp.dslearn.domain.topics.GetTopicsUseCase
 import com.unicamp.dslearn.domain.topics.GetTopicsUseCaseImpl
 import io.mockk.every

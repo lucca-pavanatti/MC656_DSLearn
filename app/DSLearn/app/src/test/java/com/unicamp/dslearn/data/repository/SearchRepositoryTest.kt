@@ -7,6 +7,8 @@ import com.unicamp.dslearn.core.model.Difficult
 import com.unicamp.dslearn.core.model.ExercisesModel
 import com.unicamp.dslearn.data.datasource.remote.TopicsPagingSource.Companion.TOPICS_PAGE_SIZE
 import com.unicamp.dslearn.data.datasource.remote.api.TopicsApi
+import com.unicamp.dslearn.data.repository.topics.TopicsRepository
+import com.unicamp.dslearn.data.repository.topics.TopicsRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json

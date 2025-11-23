@@ -1,5 +1,6 @@
 [versions]
 agp = "8.13.0"
+ksp = "2.2.10-2.0.2"
 kotlin = "2.2.10"
 coreKtx = "1.17.0"
 junit = "4.13.2"
@@ -16,6 +17,7 @@ kotlinxSerializationJson = "1.9.0"
 retrofit = "3.0.0"
 okhttp = "5.1.0"
 pagingTesting = "3.3.6"
+compose-markdown = "0.5.4"
 
 kotlinCoroutinesTest = "1.10.2"
 mockk = "1.14.5"
@@ -23,6 +25,9 @@ mockwebserver = "5.1.0"
 turbine = "1.2.1"
 pagingRuntimeKtx = "3.3.6"
 robolectric = "4.16"
+foundationLayout = "1.9.5"
+roomCompiler = "2.8.4"
+roomKtx = "2.8.4"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
@@ -41,6 +46,8 @@ androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 koin-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
+compose-markdown = { group = "com.github.jeziellago", name = "compose-markdown", version.ref = "compose-markdown" }
+
 
 # Test Dependencies
 androidx-paging-runtime-ktx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "pagingRuntimeKtx" }
@@ -52,7 +59,7 @@ kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 okhttp-mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "mockwebserver" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
-robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric"}
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 
 
 # Network
@@ -60,12 +67,17 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-kotlinx-serialization = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofit" }
+androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
 
 
 

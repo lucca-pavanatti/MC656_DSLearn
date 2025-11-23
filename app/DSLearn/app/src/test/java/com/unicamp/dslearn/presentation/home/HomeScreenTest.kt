@@ -9,7 +9,9 @@ import androidx.paging.PagingData
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.unicamp.dslearn.MainDispatcherRule
 import com.unicamp.dslearn.core.model.TopicModel
-import com.unicamp.dslearn.ui.theme.DSLearnTheme
+import com.unicamp.dslearn.presentation.screens.home.HomeScreen
+import com.unicamp.dslearn.presentation.screens.exercises.ExercisesViewModel
+import com.unicamp.dslearn.core.ui.theme.DSLearnTheme
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,7 +32,7 @@ class HomeScreenTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val viewModel: HomeViewModel = mockk()
+    private val viewModel: ExercisesViewModel = mockk()
 
     @Test
     fun `when card is displayed, assert on card click calls callback function`() = runTest {

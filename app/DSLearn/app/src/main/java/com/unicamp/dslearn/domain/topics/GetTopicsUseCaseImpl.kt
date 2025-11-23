@@ -1,6 +1,6 @@
 package com.unicamp.dslearn.domain.topics
 
-import com.unicamp.dslearn.data.repository.TopicsRepository
+import com.unicamp.dslearn.data.repository.topics.TopicsRepository
 
 internal class GetTopicsUseCaseImpl(private val topicsRepository: TopicsRepository) :
     GetTopicsUseCase {
