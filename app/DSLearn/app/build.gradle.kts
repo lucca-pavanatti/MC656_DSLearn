@@ -100,6 +100,11 @@ dependencies {
 
     implementation(libs.compose.markdown)
 
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.auth)
+    implementation(libs.googleid)
+    implementation(libs.androidx.security.crypto)
+
 
     testImplementation(libs.androidx.paging.testing)
     testImplementation(libs.androidx.ui.test.junit4)

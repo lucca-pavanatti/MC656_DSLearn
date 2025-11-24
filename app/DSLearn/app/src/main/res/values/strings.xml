@@ -2,4 +2,13 @@
     <string name="app_name">DS Learn</string>
     <string name="home">Home</string>
     <string name="search">Search</string>
+
+    <string name="sign_in_success">Welcome back!</string>
+    <string name="sign_out_success">Signed out successfully</string>
+    <string name="error_no_account">No Google account found. Please add one in Settings.</string>
+    <string name="error_network">No internet connection. Please check and try again.</string>
+    <string name="error_timeout">Connection timed out. Please try again.</string>
+    <string name="error_parsing">Something went wrong. Please try again.</string>
+    <string name="error_authentication">Authentication failed. Please try again.</string>
+    <string name="error_unknown">Sign in failed. Please try again later.</string>
 </resources>

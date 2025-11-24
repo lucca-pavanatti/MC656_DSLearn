@@ -1,12 +1,29 @@
 package com.unicamp.dslearn.domain.di
 
+import com.unicamp.dslearn.domain.auth.SignInUseCase
+import com.unicamp.dslearn.domain.auth.SignInUseCaseImpl
+import com.unicamp.dslearn.domain.auth.SignOutUseCase
+import com.unicamp.dslearn.domain.auth.SignOutUseCaseImpl
 import com.unicamp.dslearn.domain.topics.GetTopicsUseCase
 import com.unicamp.dslearn.domain.topics.GetTopicsUseCaseImpl
 import com.unicamp.dslearn.domain.topics.SetTopicAsCompletedUseCase
 import com.unicamp.dslearn.domain.topics.SetTopicAsCompletedUseCaseImpl
+import com.unicamp.dslearn.domain.user.GetCurrentUserUseCase
+import com.unicamp.dslearn.domain.user.GetCurrentUserUseCaseImpl
+import com.unicamp.dslearn.domain.user.GetUserMetricsUseCase
+import com.unicamp.dslearn.domain.user.GetUserMetricsUseCaseImpl
 import org.koin.dsl.module
 
 val diModule = module {
     factory<GetTopicsUseCase> { GetTopicsUseCaseImpl(get()) }
+
     factory<SetTopicAsCompletedUseCase> { SetTopicAsCompletedUseCaseImpl(get()) }
+
+    factory<SignInUseCase> { SignInUseCaseImpl(get()) }
+
+    factory<SignOutUseCase> { SignOutUseCaseImpl(get()) }
+
+    factory<GetCurrentUserUseCase> { GetCurrentUserUseCaseImpl(get()) }
+
+    factory<GetUserMetricsUseCase> { GetUserMetricsUseCaseImpl(get()) }
 }
