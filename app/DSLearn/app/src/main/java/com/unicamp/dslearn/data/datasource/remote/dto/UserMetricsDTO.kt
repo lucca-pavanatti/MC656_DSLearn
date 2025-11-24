@@ -10,17 +10,17 @@ data class UserMetricsDTO(
     @SerialName("completedTopics") val completedTopics: Int,
     @SerialName("inProgressTopics") val inProgressTopics: Int,
     @SerialName("notStartedTopics") val notStartedTopics: Int,
-    @SerialName("topicsCompletionPercentage") val topicsCompletionPercentage: Int,
+    @SerialName("topicsCompletionPercentage") val topicsCompletionPercentage: Float,
     @SerialName("totalExercises") val totalExercises: Int,
     @SerialName("completedExercises") val completedExercises: Int,
     @SerialName("inProgressExercises") val inProgressExercises: Int,
     @SerialName("notStartedExercises") val notStartedExercises: Int,
-    @SerialName("exercisesCompletionPercentage") val exercisesCompletionPercentage: Int,
+    @SerialName("exercisesCompletionPercentage") val exercisesCompletionPercentage: Float,
     @SerialName("exercisesByDifficulty")
     val exercisesByDifficulty: ExercisesByDifficultyDTO,
     @SerialName("exercisesByTopic")
     val exercisesByTopic: List<ExercisesByTopicDTO> = emptyList(),
-    @SerialName("overallProgress") val overallProgress: Int
+    @SerialName("overallProgress") val overallProgress: Float
 )
 
 @Serializable
@@ -36,7 +36,7 @@ data class DifficultyStatsDTO(
     @SerialName("completed") val completed: Int,
     @SerialName("inProgress") val inProgress: Int,
     @SerialName("notStarted") val notStarted: Int,
-    @SerialName("completionPercentage") val completionPercentage: Int
+    @SerialName("completionPercentage") val completionPercentage: Float
 )
 
 @Serializable
@@ -46,5 +46,5 @@ data class ExercisesByTopicDTO(
     @SerialName("completedExercises") val completedExercises: Int,
     @SerialName("inProgressExercises") val inProgressExercises: Int,
     @SerialName("notStartedExercises") val notStartedExercises: Int,
-    @SerialName("completionPercentage") val completionPercentage: Int
+    @SerialName("completionPercentage") val completionPercentage: Float
 )

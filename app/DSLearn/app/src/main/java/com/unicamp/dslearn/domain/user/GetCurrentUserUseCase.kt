@@ -1,7 +1,8 @@
 package com.unicamp.dslearn.domain.user
 
 import com.unicamp.dslearn.core.model.UserModel
+import kotlinx.coroutines.flow.Flow
 
 fun interface GetCurrentUserUseCase {
-    suspend operator fun invoke(): UserModel?
+    operator fun invoke(): Flow<UserModel?>
 }

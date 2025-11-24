@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.core.content.edit
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class TokenManager(context: Context) {
     private val masterKey = MasterKey.Builder(context)
@@ -18,14 +21,19 @@ class TokenManager(context: Context) {
         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
     )
 
+    private val _token =
+        MutableStateFlow(encryptedPrefs.getString(GOOGLE_ID_TOKEN, null))
+
+
     fun saveToken(token: String) {
         encryptedPrefs.edit {
             putString(GOOGLE_ID_TOKEN, token)
                 .putLong(TIMESTAMP, System.currentTimeMillis())
         }
+        _token.value = token
     }
 
-    fun getToken(): String? = encryptedPrefs.getString(GOOGLE_ID_TOKEN, null)
+    fun getToken(): StateFlow<String?> = _token.asStateFlow()
 
 
     fun clearToken() {

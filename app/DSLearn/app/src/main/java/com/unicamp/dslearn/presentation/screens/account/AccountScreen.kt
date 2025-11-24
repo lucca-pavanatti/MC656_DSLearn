@@ -250,7 +250,7 @@ fun AccountScreen(
 
         is AccountUiState.SignedIn -> {
             SignedInView(
-                modifier = modifier,1
+                modifier = modifier,
                 userName = uiState.userName,
                 userEmail = uiState.userEmail,
                 topicsCompleted = uiState.topicsCompleted,

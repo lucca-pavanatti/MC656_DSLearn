@@ -12,7 +12,6 @@ class TopicDetailsViewModel(
 
     fun setTopicAsCompleted(topicName: String) {
         viewModelScope.launch {
-
             setTopicAsCompletedUseCase(topicName)
         }
     }

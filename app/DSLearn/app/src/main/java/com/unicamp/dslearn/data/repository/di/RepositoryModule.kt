@@ -15,11 +15,11 @@ import org.koin.dsl.module
 val repositoryModule = module {
     single { TokenManager(androidContext()) }
 
-    single<TopicsRepository> { TopicsRepositoryImpl(get(), get()) }
+    single<TopicsRepository> { TopicsRepositoryImpl(get(), get(), get()) }
 
     single<ExercisesRepository> { ExercisesRepositoryImpl(get()) }
 
-    single<AuthRepository> { AuthRepositoryImpl(get(), get(), get()) }
+    single<AuthRepository> { AuthRepositoryImpl(get(), get(), get(), get()) }
 
     single<UserRepository> { UserRepositoryImpl(get(), get()) }
 }

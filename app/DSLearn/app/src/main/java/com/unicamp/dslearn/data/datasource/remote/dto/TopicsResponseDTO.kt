@@ -1,6 +1,5 @@
 package com.unicamp.dslearn.data.datasource.remote.dto
 
-import androidx.compose.runtime.MovableContent
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -21,3 +20,16 @@ data class TopicItemResponseDTO(
     @SerialName("name") val name: String = "",
     @SerialName("contentMarkdown") val contentMarkdown: String = "",
 )
+
+@Serializable
+data class TopicsStatusDTO(
+    @SerialName("status") val status: String,
+    @SerialName("topic_name") val topicName: String,
+)
+
+@Serializable
+data class TopicsProgressResponseDTO(
+    @SerialName("name") val name: String,
+    @SerialName("status") val status: String,
+)
+

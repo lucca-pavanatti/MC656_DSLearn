@@ -8,18 +8,13 @@ import com.unicamp.dslearn.core.model.TopicModel
 import com.unicamp.dslearn.domain.topics.GetTopicsUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.stateIn
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class HomeViewModel(
     getTopicsUseCase: GetTopicsUseCase
 ) : ViewModel() {
 
-    val topicListState: Flow<PagingData<TopicModel>> =
-        getTopicsUseCase("")
+    val topicListState: Flow<PagingData<TopicModel>> = getTopicsUseCase("")
             .cachedIn(
                 viewModelScope
             )

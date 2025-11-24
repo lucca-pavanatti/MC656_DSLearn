@@ -32,7 +32,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.unicamp.dslearn.R
-import com.unicamp.dslearn.core.model.TopicModel
+import com.unicamp.dslearn.core.model.ExercisesModel
 import com.unicamp.dslearn.presentation.composables.SearchBarTrailingIcon
 import com.unicamp.dslearn.presentation.composables.Topic
 import org.koin.androidx.compose.koinViewModel
@@ -51,11 +51,12 @@ fun ExercisesScreen(
         topBar = { ExercisesTopBar(scrollBehavior) }
     ) { paddingValues ->
 
-        val exercisePagingItems: LazyPagingItems<TopicModel> =
+        val exercisePagingItems: LazyPagingItems<ExercisesModel> =
             viewModel.exerciseListState.collectAsLazyPagingItems()
 
         ExercisesScreen(
-            Modifier.padding(paddingValues), exercisePagingItems,
+            Modifier.padding(paddingValues),
+            exercisePagingItems,
             viewModel.searchQueryState,
             onTopicClick
         )
@@ -66,7 +67,7 @@ fun ExercisesScreen(
 @Composable
 private fun ExercisesScreen(
     modifier: Modifier = Modifier,
-    exercisePagingItems: LazyPagingItems<TopicModel>,
+    exercisePagingItems: LazyPagingItems<ExercisesModel>,
     searchQuery: TextFieldState,
     onTopicClick: (String, String, Boolean) -> Unit
 ) {
@@ -115,10 +116,10 @@ private fun ExercisesScreen(
                 items(exercisePagingItems.itemCount) { index ->
                     exercisePagingItems[index]?.let { topicModel ->
                         Topic(
-                            name = topicModel.name,
-                            content = topicModel.content
+                            name = topicModel.title,
+                            content = topicModel.url
                         ) {
-                            onTopicClick(topicModel.name, topicModel.content, topicModel.completed)
+                            onTopicClick(topicModel.title, topicModel.url, true)
                         }
                     }
                 }

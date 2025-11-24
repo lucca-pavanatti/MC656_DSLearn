@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.filter
-import com.unicamp.dslearn.core.model.TopicModel
-import com.unicamp.dslearn.domain.topics.GetTopicsUseCase
+import com.unicamp.dslearn.core.model.ExercisesModel
+import com.unicamp.dslearn.domain.exercises.GetExercisesUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,19 +20,19 @@ import kotlinx.coroutines.flow.stateIn
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ExercisesViewModel(
-    getTopicsUseCase: GetTopicsUseCase
+    getExercisesUseCase: GetExercisesUseCase
 ) : ViewModel() {
 
     val searchQueryState = TextFieldState()
 
     @OptIn(FlowPreview::class)
-    val exerciseListState: StateFlow<PagingData<TopicModel>> =
+    val exerciseListState: StateFlow<PagingData<ExercisesModel>> =
         snapshotFlow { searchQueryState.text }
             .debounce(500)
             .flatMapLatest { query ->
-                getTopicsUseCase(query.toString()).map { pagingData ->
-                    pagingData.filter { topic ->
-                        topic.name.contains(query, ignoreCase = true)
+                getExercisesUseCase("", "").map { pagingData ->
+                    pagingData.filter { exercises ->
+                        exercises.title.contains(query, ignoreCase = true)
                     }
                 }
             }.cachedIn(
