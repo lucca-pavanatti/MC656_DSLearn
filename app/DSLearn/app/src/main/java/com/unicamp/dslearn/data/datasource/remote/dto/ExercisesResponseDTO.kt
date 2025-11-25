@@ -14,7 +14,6 @@ data class ExercisesResponseDTO(
     @SerialName("last") val last: Boolean
 )
 
-
 @Serializable
 data class ExerciseItemResponseDTO(
     @SerialName("id") val id: Int,
@@ -23,4 +22,17 @@ data class ExerciseItemResponseDTO(
     @SerialName("difficulty") val difficulty: String = "",
     @SerialName("relatedTopics") val relatedTopics: String = "",
     @SerialName("companies") val companies: String = ""
+)
+
+@Serializable
+data class ExerciseStatusDTO(
+    @SerialName("status") val status: String,
+    @SerialName("exercise_id") val exerciseId: Int,
+)
+
+@Serializable
+data class ExerciseProgressResponseDTO(
+    @SerialName("id") val id: Int,
+    @SerialName("title") val title: String,
+    @SerialName("status") val status: String,
 )

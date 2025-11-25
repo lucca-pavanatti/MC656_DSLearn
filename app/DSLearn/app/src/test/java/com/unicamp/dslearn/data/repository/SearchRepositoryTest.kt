@@ -4,7 +4,7 @@ package com.unicamp.dslearn.data.repository
 import androidx.paging.testing.asSnapshot
 import com.unicamp.dslearn.core.model.TopicModel
 import com.unicamp.dslearn.core.model.Difficult
-import com.unicamp.dslearn.core.model.ExercisesModel
+import com.unicamp.dslearn.core.model.ExerciseModel
 import com.unicamp.dslearn.data.datasource.remote.TopicsPagingSource.Companion.TOPICS_PAGE_SIZE
 import com.unicamp.dslearn.data.datasource.remote.api.TopicsApi
 import com.unicamp.dslearn.data.repository.topics.TopicsRepository
@@ -84,12 +84,12 @@ class SearchRepositoryTest {
                 name = "Array 0",
                 theory = "Um array é uma coleção de itens armazenados em locais de memória contíguos.",
                 exercises = listOf(
-                    ExercisesModel(
+                    ExerciseModel(
                         id = 101,
                         title = "Two Sum",
                         difficult = Difficult.EASY
                     ),
-                    ExercisesModel(
+                    ExerciseModel(
                         id = 102,
                         title = "Rotate Array",
                         difficult = Difficult.MEDIUM

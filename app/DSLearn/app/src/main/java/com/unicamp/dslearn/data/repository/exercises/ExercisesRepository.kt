@@ -1,12 +1,15 @@
 package com.unicamp.dslearn.data.repository.exercises
 
 import androidx.paging.PagingData
-import com.unicamp.dslearn.core.model.ExercisesModel
+import com.unicamp.dslearn.core.model.ExerciseModel
 import kotlinx.coroutines.flow.Flow
 
-fun interface ExercisesRepository {
+interface ExercisesRepository {
     fun getExercises(
-        difficult: String,
-        dataStructure: String
-    ): Flow<PagingData<ExercisesModel>>
+        difficult: String?,
+        dataStructure: String?,
+        company: String?
+    ): Flow<PagingData<ExerciseModel>>
+
+    suspend fun setExerciseAsCompleted(id: Int)
 }

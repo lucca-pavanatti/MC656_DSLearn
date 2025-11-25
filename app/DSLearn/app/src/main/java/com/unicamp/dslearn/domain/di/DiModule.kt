@@ -6,6 +6,8 @@ import com.unicamp.dslearn.domain.auth.SignOutUseCase
 import com.unicamp.dslearn.domain.auth.SignOutUseCaseImpl
 import com.unicamp.dslearn.domain.exercises.GetExercisesUseCase
 import com.unicamp.dslearn.domain.exercises.GetExercisesUseCaseImpl
+import com.unicamp.dslearn.domain.exercises.SetExerciseAsCompletedUseCase
+import com.unicamp.dslearn.domain.exercises.SetExerciseAsCompletedUseCaseImpl
 import com.unicamp.dslearn.domain.topics.GetTopicsUseCase
 import com.unicamp.dslearn.domain.topics.GetTopicsUseCaseImpl
 import com.unicamp.dslearn.domain.topics.SetTopicAsCompletedUseCase
@@ -22,6 +24,8 @@ val diModule = module {
     factory<SetTopicAsCompletedUseCase> { SetTopicAsCompletedUseCaseImpl(get()) }
 
     factory<GetExercisesUseCase> { GetExercisesUseCaseImpl(get()) }
+
+    factory<SetExerciseAsCompletedUseCase> { SetExerciseAsCompletedUseCaseImpl(get()) }
 
     factory<SignInUseCase> { SignInUseCaseImpl(get()) }
 

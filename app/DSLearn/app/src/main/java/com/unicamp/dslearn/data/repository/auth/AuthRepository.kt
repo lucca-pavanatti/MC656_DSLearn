@@ -4,7 +4,7 @@ import com.unicamp.dslearn.core.model.UserModel
 import kotlinx.coroutines.flow.StateFlow
 
 interface AuthRepository {
-    suspend fun signIn(googleIdToken: String): UserModel?
+    suspend fun signIn(googleIdToken: String)
 
     fun getToken(): StateFlow<String?>
 

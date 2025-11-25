@@ -5,6 +5,7 @@ import android.credentials.GetCredentialException
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -72,6 +73,8 @@ import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import com.unicamp.dslearn.R
+import com.unicamp.dslearn.core.model.UserMetricsModel
+import com.unicamp.dslearn.presentation.composables.LoadingIndicator
 import com.unicamp.dslearn.presentation.screens.account.uistate.AccountUiEvent
 import com.unicamp.dslearn.presentation.screens.account.uistate.AccountUiState
 import com.unicamp.dslearn.presentation.screens.account.uistate.SignInErrorType
@@ -84,12 +87,16 @@ import java.util.Base64
 
 
 private const val TAG = "AccountScreen"
-private const val WEB_CLIENT_ID = "web_client_id" // Change to Google Cloud WebClientId
+private const val WEB_CLIENT_ID =
+    "web_client_id" // Change to Google Cloud WebClientId
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AccountScreen(viewModel: AccountViewModel = koinViewModel()) {
+fun AccountScreen(
+    viewModel: AccountViewModel = koinViewModel(),
+    onMetricsClick: () -> Unit
+) {
     val context = LocalContext.current
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
@@ -166,7 +173,8 @@ fun AccountScreen(viewModel: AccountViewModel = koinViewModel()) {
             },
             onSignOutClick = {
                 viewModel.signOut()
-            }
+            },
+            onMetricsClick = onMetricsClick,
         )
     }
 }
@@ -234,11 +242,12 @@ fun AccountScreen(
     modifier: Modifier = Modifier,
     uiState: AccountUiState,
     onSignInClick: () -> Unit,
-    onSignOutClick: () -> Unit
+    onSignOutClick: () -> Unit,
+    onMetricsClick: () -> Unit
 ) {
     when (uiState) {
         is AccountUiState.Loading -> {
-            LoadingScreen(modifier = modifier)
+            LoadingIndicator(modifier = modifier)
         }
 
         is AccountUiState.SignedOut -> {
@@ -253,24 +262,15 @@ fun AccountScreen(
                 modifier = modifier,
                 userName = uiState.userName,
                 userEmail = uiState.userEmail,
-                topicsCompleted = uiState.topicsCompleted,
-                topicsInProgress = uiState.topicsInProgress,
-                exercisesCompleted = uiState.exercisesCompleted,
-                onSignOutClick = onSignOutClick
+                userMetrics = uiState.userMetrics,
+                onSignOutClick = onSignOutClick,
+                onMetricsClick = onMetricsClick
             )
         }
     }
 }
 
-@Composable
-private fun LoadingScreen(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator()
-    }
-}
+
 
 @Composable
 private fun SignedOutView(modifier: Modifier = Modifier, onSignInClick: () -> Unit) {
@@ -405,10 +405,9 @@ private fun SignedInView(
     modifier: Modifier = Modifier,
     userName: String,
     userEmail: String,
-    topicsCompleted: Int,
-    topicsInProgress: Int,
-    exercisesCompleted: Int,
-    onSignOutClick: () -> Unit
+    userMetrics: UserMetricsModel,
+    onSignOutClick: () -> Unit,
+    onMetricsClick: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -470,19 +469,19 @@ private fun SignedInView(
         ) {
             StatCard(
                 icon = Icons.Outlined.CheckCircle,
-                value = topicsCompleted.toString(),
+                value = userMetrics?.completedTopics.toString(),
                 label = "Topics Completed",
                 modifier = Modifier.weight(1f)
             )
             StatCard(
                 icon = Icons.Outlined.Settings,
-                value = topicsInProgress.toString(),
-                label = "Topics In Progress",
+                value = userMetrics.inProgressExercises.toString(),
+                label = "Exercises In Progress",
                 modifier = Modifier.weight(1f)
             )
             StatCard(
                 icon = Icons.Outlined.Create,
-                value = exercisesCompleted.toString(),
+                value = userMetrics.completedExercises.toString(),
                 label = "Exercises Completed",
                 modifier = Modifier.weight(1f)
             )
@@ -503,7 +502,10 @@ private fun SignedInView(
             )
 
             MenuItemCard(
-                icon = Icons.Outlined.Person, title = "Edit Profile", onClick = { })
+                icon = Icons.Outlined.Person,
+                title = "Metrics",
+                onClick = { onMetricsClick() }
+            )
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -537,7 +539,7 @@ private fun SignedInView(
                 colors = ButtonDefaults.outlinedButtonColors(
                     contentColor = MaterialTheme.colorScheme.error
                 ),
-                border = androidx.compose.foundation.BorderStroke(
+                border = BorderStroke(
                     1.dp, MaterialTheme.colorScheme.error
                 )
             ) {
@@ -647,6 +649,7 @@ private fun MenuItemCard(
     Card(
         onClick = onClick, modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
+
         )
     ) {
         Row(

@@ -9,15 +9,17 @@ import retrofit2.HttpException
 
 class ExercisesPagingSource(
     private val exercisesApi: ExercisesApi,
-    private val difficulty: String = "",
-    private val dataStructure: String = "",
+    private val difficulty: String?,
+    private val dataStructure: String?,
+    private val company: String?
 ) : PagingSource<Int, ExerciseItemResponseDTO>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ExerciseItemResponseDTO> {
         val page = params.key ?: TOPICS_STARTING_PAGE_INDEX
 
         return try {
-            exercisesApi.getExercises(difficulty, dataStructure).fold({ exercisesResponse ->
+            exercisesApi.getExercises(difficulty ?: "", dataStructure ?: "", company ?: "")
+                .fold({ exercisesResponse ->
                 exercisesResponse?.let {
                     val results = exercisesResponse.content
                     val prevKey = if (page > 0) {
@@ -49,7 +51,7 @@ class ExercisesPagingSource(
     }
 
     companion object {
-        const val TOPICS_PAGE_SIZE = 10
+        const val EXERCISES_PAGE_SIZE = 10
         private const val TOPICS_STARTING_PAGE_INDEX = 0
     }
 

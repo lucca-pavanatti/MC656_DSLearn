@@ -15,6 +15,13 @@ fun UserDTO.toModel() =
 fun UserMetricsDTO.toModel() = UserMetricsModel(
     totalTopics = this.totalTopics,
     completedTopics = this.completedTopics,
-    inProgressTopics = this.inProgressTopics,
-    completedExercises = this.completedExercises
+    topicsCompletionPercentage = this.topicsCompletionPercentage,
+    inProgressExercises = this.inProgressExercises,
+    completedExercises = this.completedExercises,
+    totalExercises = this.totalExercises,
+    exercisesCompletionPercentage = this.exercisesCompletionPercentage,
+    easyPercentage = this.exercisesByDifficulty.easy.completionPercentage,
+    mediumPercentage = this.exercisesByDifficulty.medium.completionPercentage,
+    hardPercentage = this.exercisesByDifficulty.hard.completionPercentage,
+    overallProgress = this.overallProgress
 )

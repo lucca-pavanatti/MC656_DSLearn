@@ -1,6 +1,6 @@
 package com.unicamp.dslearn.data.datasource.remote.api
 
-import com.unicamp.dslearn.data.datasource.remote.dto.TopicsProgressResponseDTO
+import com.unicamp.dslearn.data.datasource.remote.dto.TopicProgressResponseDTO
 import com.unicamp.dslearn.data.datasource.remote.dto.TopicsResponseDTO
 import retrofit2.Response
 import retrofit2.http.GET
@@ -22,11 +22,8 @@ interface TopicsApi {
         @Query("size") size: Int = 20,
     ): Response<TopicsResponseDTO>
 
-
     @GET("/users/{userId}/topics/progress")
     suspend fun getCompletedTopics(
         @Path("userId") userId: Int,
-    ): Response<List<TopicsProgressResponseDTO>>
-
-
+    ): Response<List<TopicProgressResponseDTO>>
 }

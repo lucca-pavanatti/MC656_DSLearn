@@ -1,12 +1,13 @@
 package com.unicamp.dslearn.core.model
 
-data class ExercisesModel(
+data class ExerciseModel(
     val id: Int,
     val title: String,
     val url: String,
     val difficulty: Difficulty,
     val relatedTopics: String,
-    val companies: String
+    val companies: String,
+    val completed: Boolean
 )
 
 enum class Difficulty() {

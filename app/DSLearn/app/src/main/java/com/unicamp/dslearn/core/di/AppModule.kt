@@ -1,6 +1,8 @@
 package com.unicamp.dslearn.core.di
 
 import com.unicamp.dslearn.presentation.screens.account.AccountViewModel
+import com.unicamp.dslearn.presentation.screens.account.metrics.MetricsViewModel
+import com.unicamp.dslearn.presentation.screens.exercisedetail.ExerciseDetailsViewModel
 import com.unicamp.dslearn.presentation.screens.exercises.ExercisesViewModel
 import com.unicamp.dslearn.presentation.screens.home.HomeViewModel
 import com.unicamp.dslearn.presentation.screens.topicdetail.TopicDetailsViewModel
@@ -12,4 +14,6 @@ val appModule = module {
     viewModel { ExercisesViewModel(get()) }
     viewModel { AccountViewModel(get(), get(), get(), get()) }
     viewModel { TopicDetailsViewModel(get()) }
+    viewModel { ExerciseDetailsViewModel(get()) }
+    viewModel { MetricsViewModel(get()) }
 }

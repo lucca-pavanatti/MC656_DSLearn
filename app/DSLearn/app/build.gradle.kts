@@ -94,6 +94,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.paging.runtime.ktx)
     implementation(libs.androidx.compose.foundation.layout)
+    implementation(libs.androidx.compose.ui.graphics)
 
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)

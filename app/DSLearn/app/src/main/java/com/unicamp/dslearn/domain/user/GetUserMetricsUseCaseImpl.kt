@@ -6,7 +6,7 @@ import com.unicamp.dslearn.data.repository.user.UserRepository
 class GetUserMetricsUseCaseImpl(private val userRepository: UserRepository) :
     GetUserMetricsUseCase {
 
-    override suspend fun invoke(userId: Int): UserMetricsModel? {
-        return userRepository.getUserMetrics(userId)
+    override suspend fun invoke(): UserMetricsModel? {
+        return userRepository.getUserMetrics()
     }
 }

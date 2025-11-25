@@ -8,5 +8,10 @@ interface UserRepository {
 
     fun getCurrentUser(): Flow<UserModel?>
 
-    suspend fun getUserMetrics(userId: Int): UserMetricsModel?
+    suspend fun getUserMetrics(): UserMetricsModel?
+
+    suspend fun setTopicAsCompleted(name: String)
+
+    suspend fun setExerciseAsCompleted(exerciseId: Int)
+
 }

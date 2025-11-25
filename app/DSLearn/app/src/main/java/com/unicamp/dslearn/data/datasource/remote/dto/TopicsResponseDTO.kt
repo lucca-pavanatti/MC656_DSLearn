@@ -22,13 +22,13 @@ data class TopicItemResponseDTO(
 )
 
 @Serializable
-data class TopicsStatusDTO(
+data class TopicStatusDTO(
     @SerialName("status") val status: String,
     @SerialName("topic_name") val topicName: String,
 )
 
 @Serializable
-data class TopicsProgressResponseDTO(
+data class TopicProgressResponseDTO(
     @SerialName("name") val name: String,
     @SerialName("status") val status: String,
 )

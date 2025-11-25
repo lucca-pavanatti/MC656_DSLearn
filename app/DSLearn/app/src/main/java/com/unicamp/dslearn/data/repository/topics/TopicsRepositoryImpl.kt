@@ -92,5 +92,6 @@ internal class TopicsRepositoryImpl(
 
     override suspend fun setTopicAsCompleted(name: String) {
         topicsDao.updateCompleted(name, true)
+        userRepository.setTopicAsCompleted(name)
     }
 }

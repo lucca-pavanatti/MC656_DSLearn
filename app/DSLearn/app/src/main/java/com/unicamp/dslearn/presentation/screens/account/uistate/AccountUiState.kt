@@ -1,5 +1,7 @@
 package com.unicamp.dslearn.presentation.screens.account.uistate
 
+import com.unicamp.dslearn.core.model.UserMetricsModel
+
 sealed class AccountUiState {
 
     data object Loading : AccountUiState()
@@ -9,9 +11,7 @@ sealed class AccountUiState {
     data class SignedIn(
         val userName: String,
         val userEmail: String,
-        val topicsCompleted: Int = 0,
-        val topicsInProgress: Int = 0,
-        val exercisesCompleted: Int = 0
+        val userMetrics: UserMetricsModel
     ) : AccountUiState()
 }
 

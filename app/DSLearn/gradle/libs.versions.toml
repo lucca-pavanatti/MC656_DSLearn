@@ -31,6 +31,7 @@ robolectric = "4.16"
 foundationLayout = "1.9.5"
 roomCompiler = "2.8.4"
 roomKtx = "2.8.4"
+uiGraphics = "1.9.5"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
@@ -77,6 +78,7 @@ retrofit-kotlinx-serialization = { group = "com.squareup.retrofit2", name = "con
 androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
+androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "uiGraphics" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

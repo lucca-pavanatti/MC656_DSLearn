@@ -2,6 +2,7 @@ package com.unicamp.dslearn.presentation.screens.account
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.unicamp.dslearn.core.model.UserMetricsModel
 import com.unicamp.dslearn.core.model.UserModel
 import com.unicamp.dslearn.domain.auth.SignInUseCase
 import com.unicamp.dslearn.domain.auth.SignOutUseCase
@@ -42,14 +43,12 @@ class AccountViewModel(
         viewModelScope.launch {
             currentUser.collect { user ->
                 user?.apply {
-                    val userMetrics = getUserMetricsUseCase(id)
+                    val userMetrics = getUserMetricsUseCase()
 
                     _uiState.value = AccountUiState.SignedIn(
                         userName = name,
                         userEmail = email,
-                        topicsCompleted = userMetrics?.completedTopics ?: 0,
-                        topicsInProgress = userMetrics?.inProgressTopics ?: 0,
-                        exercisesCompleted = userMetrics?.completedExercises ?: 0
+                        userMetrics = userMetrics ?: UserMetricsModel()
                     )
                 }
             }
