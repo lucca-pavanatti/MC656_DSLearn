@@ -4,7 +4,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import androidx.paging.testing.TestPager
 import com.unicamp.dslearn.data.datasource.remote.api.TopicsApi
-import com.unicamp.dslearn.data.datasource.remote.dto.ExercisesResponseDTO
 import com.unicamp.dslearn.data.datasource.remote.dto.TopicItemResponseDTO
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
@@ -24,7 +23,7 @@ import java.io.File
 import java.net.HttpURLConnection
 
 @RunWith(JUnit4::class)
-class SearchPagingSourceTest {
+class TopicPagingSourceTest {
 
     private val mockWebServer: MockWebServer by lazy { MockWebServer() }
 
@@ -65,76 +64,55 @@ class SearchPagingSourceTest {
 
     @Test
     fun `pagingSource load returns page when first load is successful`() = runTest {
-        val jsonSuccessResponse = File("src/test/res/raw/search_success.json").readText()
+        val jsonSuccessResponse = File("src/test/res/raw/get_topic_success.json").readText()
         val response = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_OK)
             .setBody(jsonSuccessResponse)
 
         mockWebServer.enqueue(response)
 
-        val expectedSearchResponseDTO = TopicItemResponseDTO(
-            id = 1,
-            name = "Array 0",
-            theory = "Um array é uma coleção de itens armazenados em locais de memória contíguos.",
-            exercises = listOf(
-                ExercisesResponseDTO(
-                    id = 101,
-                    title = "Two Sum",
-                    difficult = "EASY"
-                ),
-                ExercisesResponseDTO(
-                    id = 102,
-                    title = "Rotate Array",
-                    difficult = "MEDIUM"
-                ),
-
-                )
+        val expectedTopicResponseDTO = TopicItemResponseDTO(
+            name = "Array",
+            contentMarkdown = "# Arrays contentMarkdown",
         )
 
         val result = testPager.refresh() as PagingSource.LoadResult.Page
 
-        Assert.assertEquals(2, result.data.size)
-        Assert.assertEquals(expectedSearchResponseDTO, result.data[0])
+        Assert.assertEquals(10, result.data.size)
+        Assert.assertEquals(expectedTopicResponseDTO, result.data[0])
     }
 
     @Test
     fun `pagingSource load more returns correct page when second load is successful`() = runTest {
-        val jsonFirstPageSuccessResponse = File("src/test/res/raw/search_success.json").readText()
+        val jsonFirstPageSuccessResponse =
+            File("src/test/res/raw/get_topic_success.json").readText()
         val firstPageResponse = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_OK)
             .setBody(jsonFirstPageSuccessResponse)
         mockWebServer.enqueue(firstPageResponse)
 
-        val expectedFirstPageSize = 2
+        val expectedFirstPageSize = 10
         val firstPageLoadResult = testPager.refresh() as PagingSource.LoadResult.Page
 
         Assert.assertEquals(expectedFirstPageSize, firstPageLoadResult.data.size)
 
         val jsonSecondPageSuccessResponse =
-            File("src/test/res/raw/search_success_2.json").readText()
+            File("src/test/res/raw/get_topic_success_2.json").readText()
         val secondPageResponse = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_OK)
             .setBody(jsonSecondPageSuccessResponse)
         mockWebServer.enqueue(secondPageResponse)
 
-        val expectedSearchResponseDTO = TopicItemResponseDTO(
-            id = 2,
-            name = "Array 2 6",
-            theory = "Um array é uma coleção de itens armazenados em locais de memória contíguos.",
-            exercises = listOf(
-                ExercisesResponseDTO(
-                    id = 102,
-                    title = "Two Sum",
-                    difficult = "EASY"
-                ),
-            )
+        val expectedTopicResponseDTO = TopicItemResponseDTO(
+            name = "Dynamic Programming",
+            contentMarkdown = "# Programação Dinâmica contentMarkdown",
         )
 
-        val expectedSecondPageSize = 1
+        val expectedSecondPageSize = 10
         val secondPageLoadResult = testPager.append() as PagingSource.LoadResult.Page
 
         Assert.assertEquals(expectedSecondPageSize, secondPageLoadResult.data.size)
-        Assert.assertEquals(expectedSearchResponseDTO, secondPageLoadResult.data[0])
+        Assert.assertEquals(expectedTopicResponseDTO, secondPageLoadResult.data[0])
     }
 
     @Test

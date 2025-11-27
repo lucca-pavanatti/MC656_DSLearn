@@ -17,7 +17,7 @@ import org.junit.runners.JUnit4
 import kotlin.test.assertEquals
 
 @RunWith(JUnit4::class)
-class SearchCardUseCaseTest {
+class GetTopicUseCaseTest {
 
     private val topicsRepository: TopicsRepository = mockk()
 
@@ -32,16 +32,16 @@ class SearchCardUseCaseTest {
     fun `search by query should return correct results`() = runTest {
         val expectedTopicModels = listOf(
             TopicModel(
-                id = 1,
                 name = "Array 0",
-                theory = "Um array é uma coleção de itens armazenados em locais de memória contíguos.",
-                exercises = listOf()
+                content = "Um array é uma coleção de itens armazenados em locais de memória contíguos.",
+                completed = false,
+                unlocked = false
             ),
             TopicModel(
-                id = 2,
                 name = "Array 2",
-                theory = "Um array é uma coleção de itens armazenados em locais de memória contíguos.",
-                exercises = listOf()
+                content = "Um array é uma coleção de itens armazenados em locais de memória contíguos.",
+                completed = false,
+                unlocked = false
             ),
         )
 

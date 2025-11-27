@@ -38,6 +38,7 @@ class TokenManager(context: Context) {
 
     fun clearToken() {
         encryptedPrefs.edit { clear() }
+        _token.value = null
     }
 
     companion object {

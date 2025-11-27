@@ -88,7 +88,7 @@ import java.util.Base64
 
 private const val TAG = "AccountScreen"
 private const val WEB_CLIENT_ID =
-    "web_client_id" // Change to Google Cloud WebClientId
+    "666490978521-bt5sv953nvf39sms610atqardeb4a9av.apps.googleusercontent.com" // Change to Google Cloud WebClientId
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @OptIn(ExperimentalMaterial3Api::class)
