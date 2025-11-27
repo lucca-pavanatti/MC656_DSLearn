@@ -1,6 +1,5 @@
 package com.unicamp.dslearn.presentation.home
 
-import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
@@ -8,8 +7,10 @@ import androidx.compose.ui.test.performClick
 import androidx.paging.PagingData
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.unicamp.dslearn.MainDispatcherRule
-import com.unicamp.dslearn.core.model.CardModel
-import com.unicamp.dslearn.ui.theme.DSLearnTheme
+import com.unicamp.dslearn.core.model.TopicModel
+import com.unicamp.dslearn.core.ui.theme.DSLearnTheme
+import com.unicamp.dslearn.presentation.screens.home.HomeScreen
+import com.unicamp.dslearn.presentation.screens.home.HomeViewModel
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -34,31 +35,32 @@ class HomeScreenTest {
 
     @Test
     fun `when card is displayed, assert on card click calls callback function`() = runTest {
-        val expectedCardModels = listOf(
-            CardModel(
-                id = 1,
+        val expectedTopicModels = listOf(
+            TopicModel(
                 name = "Array 0",
-                theory = "Um array é uma coleção de itens armazenados em locais de memória contíguos.",
-                exercises = listOf()
+                content = "Um array é uma coleção de itens armazenados em locais de memória contíguos.",
+                completed = false,
+                unlocked = false
             ),
-            CardModel(
-                id = 2,
+            TopicModel(
                 name = "Array 2",
-                theory = "Um array é uma coleção de itens armazenados em locais de memória contíguos.",
-                exercises = listOf()
+                content = "Um array é uma coleção de itens armazenados em locais de memória contíguos.",
+                completed = false,
+                unlocked = false
+
             ),
         )
 
-        val pagingDataFlow = MutableStateFlow(PagingData.Companion.from(expectedCardModels))
-        every { viewModel.cardListState } returns pagingDataFlow
-        every { viewModel.searchQueryState } returns TextFieldState("")
+        val pagingDataFlow = MutableStateFlow(PagingData.Companion.from(expectedTopicModels))
+        every { viewModel.topicListState } returns pagingDataFlow
 
         composeTestRule.setContent {
             DSLearnTheme {
-                HomeScreen(viewModel, onCardClick = { cardId, cardName ->
-                    assertEquals(expectedCardModels[0].id, cardId)
-                    assertEquals(expectedCardModels[0].name, cardName)
-                })
+                HomeScreen(viewModel, onTopicClick = { name, content, completed ->
+                    assertEquals(expectedTopicModels[0].name, name)
+                    assertEquals(expectedTopicModels[0].content, content)
+                }
+                )
             }
         }
 

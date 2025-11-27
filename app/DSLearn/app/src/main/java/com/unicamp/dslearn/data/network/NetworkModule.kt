@@ -1,7 +1,9 @@
 package com.unicamp.dslearn.data.network
 
-import com.unicamp.dslearn.data.datasource.remote.api.SearchApi
-import com.unicamp.dslearn.data.network.fake.FakeResponseInterceptor
+import com.unicamp.dslearn.data.datasource.remote.api.AuthApi
+import com.unicamp.dslearn.data.datasource.remote.api.ExercisesApi
+import com.unicamp.dslearn.data.datasource.remote.api.TopicsApi
+import com.unicamp.dslearn.data.datasource.remote.api.UserApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -21,7 +23,6 @@ private object NetworkModule {
         return OkHttpClient
             .Builder()
             .addInterceptor(httpLoggingInterceptor)
-            .addInterceptor(FakeResponseInterceptor())
             .readTimeout(60, TimeUnit.SECONDS)
             .connectTimeout(60, TimeUnit.SECONDS)
             .build()
@@ -42,15 +43,27 @@ private object NetworkModule {
             .build()
     }
 
-    fun provideService(retrofit: Retrofit): SearchApi =
-        retrofit.create(SearchApi::class.java)
+    fun provideTopicsApiService(retrofit: Retrofit): TopicsApi =
+        retrofit.create(TopicsApi::class.java)
 
-    private const val BASE_URL = "https://example.com/"
+    fun provideExercisesApiService(retrofit: Retrofit): ExercisesApi =
+        retrofit.create(ExercisesApi::class.java)
+
+    fun provideAuthApiService(retrofit: Retrofit): AuthApi =
+        retrofit.create(AuthApi::class.java)
+
+    fun provideUserApiService(retrofit: Retrofit): UserApi =
+        retrofit.create(UserApi::class.java)
+
+    private const val BASE_URL = "http://10.0.2.2:8080"
 }
 
 val networkModule = module {
     single { NetworkModule.provideHttpLoggingInterceptor() }
     single { NetworkModule.provideHttpClient(get()) }
     single { NetworkModule.provideRetrofit(get()) }
-    single { NetworkModule.provideService(get()) }
+    single { NetworkModule.provideTopicsApiService(get()) }
+    single { NetworkModule.provideExercisesApiService(get()) }
+    single { NetworkModule.provideAuthApiService(get()) }
+    single { NetworkModule.provideUserApiService(get()) }
 }

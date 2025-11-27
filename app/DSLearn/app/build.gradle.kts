@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.jetbrains.kotlin.serialization)
@@ -55,6 +56,10 @@ android {
         }
     }
 
+    configurations.all {
+        exclude(group = "com.intellij", module = "annotations")
+    }
+
     afterEvaluate {
         tasks.withType<Test>().configureEach {
             if (name.contains("ReleaseUnitTest")) {
@@ -88,6 +93,19 @@ dependencies {
     implementation(libs.retrofit.kotlinx.serialization)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.paging.runtime.ktx)
+    implementation(libs.androidx.compose.foundation.layout)
+    implementation(libs.androidx.compose.ui.graphics)
+
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+
+    implementation(libs.compose.markdown)
+
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.auth)
+    implementation(libs.googleid)
+    implementation(libs.androidx.security.crypto)
+
 
     testImplementation(libs.androidx.paging.testing)
     testImplementation(libs.androidx.ui.test.junit4)
